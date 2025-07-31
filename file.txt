@@ -1,0 +1,38 @@
+.
+├── CMakeLists.txt
+├── components
+│   ├── buttons
+│   ├── buzzer
+│   ├── mpu6050
+│   │   ├── CMakeLists.txt
+│   │   ├── inc
+│   │   │   └── mpu6050.h
+│   │   ├── README.md
+│   │   └── src
+│   │       └── mpu6050.c
+│   ├── sd_card
+│   │   ├── CMakeLists.txt
+│   │   ├── inc
+│   │   │   └── sd_card.h
+│   │   ├── README.md
+│   │   └── src
+│   │       └── sd_card.c
+│   └── ssd1306
+│       ├── CMakeLists.txt
+│       ├── inc
+│       │   ├── font.h
+│       │   └── ssd1306.h
+│       ├── README.md
+│       └── src
+│           └── ssd1306.c
+├── diagrams
+│   ├── diagrama_blocos.jpg
+│   └── esquematico.pdf
+├── file.txt
+├── main
+│   ├── CMakeLists.txt
+│   └── main.c
+├── README.md
+└── sdkconfig
+
+15 directories, 21 files
