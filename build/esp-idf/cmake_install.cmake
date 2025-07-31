@@ -554,12 +554,17 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/main/cmake_install.cmake")
+  include("/home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/mpu6050/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/mpu6050/cmake_install.cmake")
+  include("/home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/buzzer/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/buttons/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
@@ -570,5 +575,10 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
   include("/home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/ssd1306/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/main/cmake_install.cmake")
 endif()
 

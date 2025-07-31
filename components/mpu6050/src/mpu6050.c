@@ -2,17 +2,6 @@
 
 static const char *TAG = "MPU6050";
 
-// Estrutura para armazenar os dados do sensor
-typedef struct {
-    int16_t accel_x;
-    int16_t accel_y;
-    int16_t accel_z;
-    int16_t temp;
-    int16_t gyro_x;
-    int16_t gyro_y;
-    int16_t gyro_z;
-} mpu6050_data_t;
-
 // Função para inicializar o I2C
 esp_err_t i2c_master_init(void)
 {

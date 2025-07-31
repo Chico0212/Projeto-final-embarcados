@@ -82,7 +82,9 @@ $<TARGET_FILE:__idf_perfmon>
 $<TARGET_FILE:__idf_rt>
 $<TARGET_FILE:__idf_spiffs>
 $<TARGET_FILE:__idf_wifi_provisioning>
-$<TARGET_FILE:__idf_main>
 $<TARGET_FILE:__idf_mpu6050>
+$<TARGET_FILE:__idf_buzzer>
+$<TARGET_FILE:__idf_buttons>
 $<TARGET_FILE:__idf_sd_card>
 $<TARGET_FILE:__idf_ssd1306>
+$<TARGET_FILE:__idf_main>

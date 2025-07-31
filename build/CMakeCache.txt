@@ -397,15 +397,6 @@ projeto-embarcados_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 projeto-embarcados_SOURCE_DIR:STATIC=/home/francisco/Desktop/estudos/Projeto-final-embarcados
 
-//Value Computed by CMake
-temp_BINARY_DIR:STATIC=/home/francisco/Desktop/estudos/Projeto-final-embarcados/build
-
-//Value Computed by CMake
-temp_IS_TOP_LEVEL:STATIC=ON
-
-//Value Computed by CMake
-temp_SOURCE_DIR:STATIC=/home/francisco/Desktop/estudos/Projeto-final-embarcados
-
 
 ########################
 # INTERNAL cache entries
@@ -554,7 +545,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=121
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=123
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP

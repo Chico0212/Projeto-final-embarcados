@@ -82,7 +82,9 @@
 /home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/rt/librt.a
 /home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/spiffs/libspiffs.a
 /home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/wifi_provisioning/libwifi_provisioning.a
-/home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/main/libmain.a
 /home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/mpu6050/libmpu6050.a
+/home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/buzzer/libbuzzer.a
+/home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/buttons/libbuttons.a
 /home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/sd_card/libsd_card.a
 /home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/ssd1306/libssd1306.a
+/home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/main/libmain.a
