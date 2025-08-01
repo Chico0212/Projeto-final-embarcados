@@ -1,5 +1,5 @@
 idf_component_register(
-    SRCS "src/ssd1306.c"
+    SRCS "src/buzzer.c"
     INCLUDE_DIRS "inc"
-    REQUIRES driver
+    REQUIRES driver ledc
 )
