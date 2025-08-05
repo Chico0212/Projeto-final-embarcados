@@ -894,6 +894,13 @@
 /home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/snake/CMakeFiles/install.dir
 /home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/snake/CMakeFiles/install/local.dir
 /home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/snake/CMakeFiles/install/strip.dir
+/home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/menu/CMakeFiles/__idf_menu.dir
+/home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/menu/CMakeFiles/edit_cache.dir
+/home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/menu/CMakeFiles/rebuild_cache.dir
+/home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/menu/CMakeFiles/list_install_components.dir
+/home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/menu/CMakeFiles/install.dir
+/home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/menu/CMakeFiles/install/local.dir
+/home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/menu/CMakeFiles/install/strip.dir
 /home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/main/CMakeFiles/__idf_main.dir
 /home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/main/CMakeFiles/edit_cache.dir
 /home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/main/CMakeFiles/rebuild_cache.dir

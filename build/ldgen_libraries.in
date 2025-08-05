@@ -91,4 +91,5 @@ $<TARGET_FILE:__idf_tilt_maze>
 $<TARGET_FILE:__idf_dodge>
 $<TARGET_FILE:__idf_paddle_pong>
 $<TARGET_FILE:__idf_snake>
+$<TARGET_FILE:__idf_menu>
 $<TARGET_FILE:__idf_main>
