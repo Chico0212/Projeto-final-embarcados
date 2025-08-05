@@ -17,9 +17,9 @@ typedef struct {
   int x, y;
 } player_pos_t;
 
-static void draw_maze(void);
+void draw_maze(void);
 
-static int update_player_from_tilt(void);
+int update_player_from_tilt(void);
 
 void start_tilt_maze_game(void);
 

@@ -13,7 +13,7 @@ static const uint8_t maze_map[MAZE_HEIGHT][MAZE_WIDTH] = {
 
 static player_pos_t player = {1, 1};
 
-static void draw_maze(void)
+void draw_maze(void)
 {
   ssd1306_clear_buffer();
 
@@ -33,7 +33,7 @@ static void draw_maze(void)
 }
 
 // Versão corrigida da função update_player_from_tilt
-static int update_player_from_tilt(void)
+int update_player_from_tilt(void)
 {
   float ax, ay, az;
   if (mpu6050_read_acceleration(&ax, &ay, &az) != ESP_OK) return 0;

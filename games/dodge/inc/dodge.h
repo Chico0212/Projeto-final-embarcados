@@ -53,15 +53,13 @@ typedef struct {
     bool active;
 } Block;
 
-static Block blocks[MAX_BLOCKS];
+void draw_player();
 
-static void draw_player();
+void draw_block(Block* b);
 
-static void draw_block(Block* b);
+void reset_game();
 
-static void reset_game();
-
-static bool check_collision(Block* b);
+bool check_collision(Block* b);
 
 void start_dodge_blocks_game(void);
 

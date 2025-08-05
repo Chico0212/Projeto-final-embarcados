@@ -15,16 +15,16 @@ static bool game_over = false;
 
 static Block blocks[MAX_BLOCKS];
 
-static void draw_player() {
+void draw_player() {
     ssd1306_draw_rect(player_x, PLAYER_Y, PLAYER_WIDTH, PLAYER_HEIGHT, true);
 }
 
-static void draw_block(Block* b) {
+void draw_block(Block* b) {
     if (b->active)
         ssd1306_draw_rect(b->x, b->y, BLOCK_WIDTH, BLOCK_HEIGHT, true);
 }
 
-static void reset_game() {
+void reset_game() {
     player_x = DISPLAY_WIDTH / 2;
     score = 0;
     game_over = false;
@@ -36,7 +36,7 @@ static void reset_game() {
     }
 }
 
-static bool check_collision(Block* b) {
+bool check_collision(Block* b) {
     return (b->x < player_x + PLAYER_WIDTH && b->x + BLOCK_WIDTH > player_x &&
             b->y < PLAYER_Y + PLAYER_HEIGHT && b->y + BLOCK_HEIGHT > PLAYER_Y);
 }

@@ -8,6 +8,8 @@
 #include "button.h"
 #include "tilt_maze.h"
 #include "dodge.h"
+#include "paddle_pong.h"
+#include "snake.h"
 
 // GPIO definitions for buttons
 #define BUTTON_UP_GPIO       GPIO_NUM_4   // Button for navigating up/previous
