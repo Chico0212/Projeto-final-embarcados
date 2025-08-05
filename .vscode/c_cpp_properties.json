@@ -7,7 +7,7 @@
         "${workspaceFolder}/components/mpu6050/inc",
         "${workspaceFolder}/components/sd_card/inc",
         "${workspaceFolder}/components/ssd1306/inc",
-        "${IDF_PATH}/components/**"
+        "${workspaceFolder}/components/**"
       ],
       "defines": [
         "ESP_PLATFORM"

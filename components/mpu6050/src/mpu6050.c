@@ -207,3 +207,23 @@ void mpu6050_task(void *pvParameters)
         vTaskDelay(500 / portTICK_PERIOD_MS); // Ler a cada 500ms
     }
 }
+
+
+// Lê aceleração
+esp_err_t mpu6050_read_acceleration(float* ax, float* ay, float* az) {
+  mpu6050_data_t raw;
+  
+  esp_err_t ret = mpu6050_read_all(&raw); 
+  if (ret != ESP_OK) return ret;
+
+  float converted_accel[3];
+  float trash[3];
+
+  mpu6050_convert_data(&raw, converted_accel, trash, trash);
+
+  *ax = converted_accel[0]; 
+  *ay = converted_accel[1]; 
+  *az = converted_accel[2]; 
+
+  return ESP_OK;
+}

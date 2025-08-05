@@ -71,3 +71,5 @@ esp_err_t mpu6050_read_all(mpu6050_data_t *data);
 void mpu6050_convert_data(mpu6050_data_t *raw_data, float *accel_g, float *gyro_dps, float *temp_c);
 
 void mpu6050_task(void *pvParameters);
+
+esp_err_t mpu6050_read_acceleration(float* ax, float* ay, float* az);

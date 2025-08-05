@@ -7,7 +7,7 @@
 #include "font.h"
 
 // Configurações I2C
-#define I2C_MASTER_SCL_IO           20    // GPIO para SCL
+#define I2C_MASTER_SCL_IO           22    // GPIO para SCL
 #define I2C_MASTER_SDA_IO           21    // GPIO para SDA
 #define I2C_MASTER_NUM              0     // Número da porta I2C
 #define I2C_MASTER_FREQ_HZ          400000 // Frequência I2C
@@ -46,24 +46,31 @@
 static uint8_t ssd1306_buffer[SSD1306_WIDTH * SSD1306_PAGES];
 
 // Função para enviar comando I2C
-static esp_err_t ssd1306_write_command(uint8_t cmd);
+esp_err_t ssd1306_write_command(uint8_t cmd);
 
 // Função para enviar dados I2C
-static esp_err_t ssd1306_write_data(uint8_t* data, size_t len);
+esp_err_t ssd1306_write_data(uint8_t* data, size_t len);
+
 // Inicializar I2C
-static void i2c_init(void);
+void i2c_init(void);
 
 // Inicializar display SSD1306
-static void ssd1306_init(void);
+void ssd1306_init(void);
 
 // Limpar buffer
 void ssd1306_clear_buffer(void);
 
 // Atualizar display
 void ssd1306_update_display(void);
+
 // Definir pixel
 void ssd1306_set_pixel(int x, int y, bool on);
 
+// Função auxiliar para desenhar os 8 pontos simétricos do círculo
+static void ssd1306_draw_circle_points(int cx, int cy, int x, int y);
+
+// Desenhar círculo usando algoritmo de Bresenham
+void ssd1306_draw_circle(int cx, int cy, int radius, bool filled);
 // Desenhar caractere
 void ssd1306_draw_char(int x, int y, char c);
 

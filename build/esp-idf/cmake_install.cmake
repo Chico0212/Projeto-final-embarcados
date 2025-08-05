@@ -564,7 +564,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/buttons/cmake_install.cmake")
+  include("/home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/button/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
@@ -575,6 +575,11 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
   include("/home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/ssd1306/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/francisco/Desktop/estudos/Projeto-final-embarcados/build/esp-idf/tilt_maze/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
