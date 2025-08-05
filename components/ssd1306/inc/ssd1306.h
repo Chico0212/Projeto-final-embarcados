@@ -1,3 +1,6 @@
+#ifndef SSD1306_H
+#define SSD1306_H
+
 #include <stdio.h>
 #include <string.h>
 #include "freertos/FreeRTOS.h"
@@ -82,3 +85,5 @@ void ssd1306_draw_line(int x0, int y0, int x1, int y1);
 
 // Desenhar retângulo
 void ssd1306_draw_rect(int x, int y, int w, int h, bool filled);
+
+#endif
