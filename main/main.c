@@ -4,6 +4,7 @@
 
 void app_main(void)
 {
+    buzzer_pwm_init()
     ESP_LOGI("MAIN", "Starting Game Menu System");
 
     // Initialize I2C and sensors

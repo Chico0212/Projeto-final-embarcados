@@ -202,7 +202,7 @@ bool is_button_pressed_debounced(gpio_num_t gpio_num)
 void handle_menu_navigation(void)
 {
     // Move to previous item (wrapping around)
-    menu_state.current_selection = (menu_state.current_selection - 1 + MAX_MENU_ITEMS) % MAX_MENU_ITEMS;
+    menu_state.current_selection = (menu_state.current_selection + 1 + MAX_MENU_ITEMS) % MAX_MENU_ITEMS;
     ESP_LOGI("MENU", "Navigated to: %s", menu_items[menu_state.current_selection]);
     
     // Redraw menu with new selection

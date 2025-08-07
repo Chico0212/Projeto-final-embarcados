@@ -16,8 +16,8 @@
 #include "snake.h"
 
 // GPIO definitions for buttons
-#define BUTTON_UP_GPIO       GPIO_NUM_4   // Button for navigating up/previous
-#define BUTTON_SELECT_GPIO   GPIO_NUM_5   // Button for selecting/confirming
+#define BUTTON_UP_GPIO       GPIO_NUM_40   // Button for navigating up/previous
+#define BUTTON_SELECT_GPIO   GPIO_NUM_38   // Button for selecting/confirming
 
 // Display dimensions (assuming standard SSD1306)
 #define DISPLAY_WIDTH        128

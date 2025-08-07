@@ -10,8 +10,8 @@
 #include "font.h"
 
 // Configurações I2C
-#define I2C_MASTER_SCL_IO           22    // GPIO para SCL
-#define I2C_MASTER_SDA_IO           21    // GPIO para SDA
+#define I2C_MASTER_SCL_IO           9    // GPIO para SCL
+#define I2C_MASTER_SDA_IO           8    // GPIO para SDA
 #define I2C_MASTER_NUM              0     // Número da porta I2C
 #define I2C_MASTER_FREQ_HZ          400000 // Frequência I2C
 #define I2C_MASTER_TX_BUF_DISABLE   0
