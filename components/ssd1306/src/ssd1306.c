@@ -3,10 +3,12 @@
 static const char *TAG = "SSD1306";
 
 // Buffer do display
-static uint8_t ssd1306_buffer[SSD1306_WIDTH * SSD1306_PAGES];
+// static uint8_t ssd1306_buffer[SSD1306_WIDTH * SSD1306_PAGES];
+static uint8_t ssd1306_buffer[SSD1306_WIDTH * SSD1306_HEIGHT / SSD1306_PAGES];
 
 // Função para enviar comando I2C
 esp_err_t ssd1306_write_command(uint8_t cmd) {
+  ESP_LOGD(TAG, "Enviando comando: 0x%02X", cmd);
   i2c_cmd_handle_t cmd_link = i2c_cmd_link_create();
   i2c_master_start(cmd_link);
   i2c_master_write_byte(cmd_link, (SSD1306_I2C_ADDR << 1) | I2C_MASTER_WRITE, true);
@@ -15,11 +17,18 @@ esp_err_t ssd1306_write_command(uint8_t cmd) {
   i2c_master_stop(cmd_link);
   esp_err_t ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd_link, I2C_MASTER_TIMEOUT_MS / portTICK_PERIOD_MS);
   i2c_cmd_link_delete(cmd_link);
+  
+  if (ret != ESP_OK) {
+    ESP_LOGE(TAG, "ERRO ao enviar comando 0x%02X: %s", cmd, esp_err_to_name(ret));
+  } else {
+    ESP_LOGD(TAG, "Comando 0x%02X enviado com sucesso", cmd);
+  }
   return ret;
 }
 
 // Função para enviar dados I2C
 esp_err_t ssd1306_write_data(uint8_t* data, size_t len) {
+  ESP_LOGI(TAG, "Enviando %d bytes de dados", len);
   i2c_cmd_handle_t cmd_link = i2c_cmd_link_create();
   i2c_master_start(cmd_link);
   i2c_master_write_byte(cmd_link, (SSD1306_I2C_ADDR << 1) | I2C_MASTER_WRITE, true);
@@ -28,11 +37,52 @@ esp_err_t ssd1306_write_data(uint8_t* data, size_t len) {
   i2c_master_stop(cmd_link);
   esp_err_t ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd_link, I2C_MASTER_TIMEOUT_MS / portTICK_PERIOD_MS);
   i2c_cmd_link_delete(cmd_link);
+  
+  if (ret != ESP_OK) {
+    ESP_LOGE(TAG, "ERRO ao enviar dados (%d bytes): %s", len, esp_err_to_name(ret));
+  } else {
+    ESP_LOGI(TAG, "Dados enviados com sucesso (%d bytes)", len);
+    // Log dos primeiros bytes para debug
+    ESP_LOGI(TAG, "Primeiros 8 bytes: %02X %02X %02X %02X %02X %02X %02X %02X", 
+             data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7]);
+  }
   return ret;
 }
 
+// Função para escanear dispositivos I2C
+void i2c_scan(void) {
+  ESP_LOGI(TAG, "=== Escaneando dispositivos I2C ===");
+  int devices_found = 0;
+  
+  for (int addr = 1; addr < 127; addr++) {
+    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+    i2c_master_start(cmd);
+    i2c_master_write_byte(cmd, (addr << 1) | I2C_MASTER_WRITE, true);
+    i2c_master_stop(cmd);
+    
+    esp_err_t ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, 100 / portTICK_PERIOD_MS);
+    i2c_cmd_link_delete(cmd);
+    
+    if (ret == ESP_OK) {
+      ESP_LOGI(TAG, ">>> Dispositivo encontrado no endereço: 0x%02X", addr);
+      devices_found++;
+    }
+  }
+  
+  if (devices_found == 0) {
+    ESP_LOGW(TAG, "Nenhum dispositivo I2C encontrado!");
+  } else {
+    ESP_LOGI(TAG, "Total de dispositivos encontrados: %d", devices_found);
+  }
+  ESP_LOGI(TAG, "=== Fim do scan I2C ===");
+}
+
 // Inicializar I2C
-void i2c_init(void) {
+esp_err_t i2c_init(void) {
+  ESP_LOGI(TAG, "Inicializando I2C...");
+  ESP_LOGI(TAG, "SDA: GPIO%d, SCL: GPIO%d", I2C_MASTER_SDA_IO, I2C_MASTER_SCL_IO);
+  ESP_LOGI(TAG, "Frequência: %d Hz", I2C_MASTER_FREQ_HZ);
+  
   i2c_config_t conf = {
     .mode = I2C_MODE_MASTER,
     .sda_io_num = I2C_MASTER_SDA_IO,
@@ -42,19 +92,30 @@ void i2c_init(void) {
     .master.clk_speed = I2C_MASTER_FREQ_HZ,
   };
 
-  ESP_ERROR_CHECK(i2c_param_config(I2C_MASTER_NUM, &conf));
-  const int ret = i2c_driver_install(I2C_MASTER_NUM, conf.mode, I2C_MASTER_RX_BUF_DISABLE, I2C_MASTER_TX_BUF_DISABLE, 0);
-
+  esp_err_t ret = i2c_param_config(I2C_MASTER_NUM, &conf);
   if (ret != ESP_OK) {
-    printf("\nFailed to install driver: %s\n", esp_err_to_name(ret));
+    ESP_LOGE(TAG, "ERRO na configuração I2C: %s", esp_err_to_name(ret));
+    return ret;
   }
+  
+  ret = i2c_driver_install(I2C_MASTER_NUM, conf.mode, I2C_MASTER_RX_BUF_DISABLE, I2C_MASTER_TX_BUF_DISABLE, 0);
+  if (ret != ESP_OK) {
+    ESP_LOGE(TAG, "ERRO na instalação do driver I2C: %s", esp_err_to_name(ret));
+  } else {
+    ESP_LOGI(TAG, "I2C inicializado com sucesso!");
+  }
+
+  return ret;
 }
 
 // Inicializar display SSD1306
 void ssd1306_init(void) {
-  ESP_LOGI(TAG, "Inicializando SSD1306...");
+  ESP_LOGI(TAG, "=== Inicializando SSD1306 ===");
+  ESP_LOGI(TAG, "Endereço I2C: 0x%02X", SSD1306_I2C_ADDR);
+  ESP_LOGI(TAG, "Resolução: %dx%d", SSD1306_WIDTH, SSD1306_HEIGHT);
 
-  // Sequência de inicialização
+  // Sequência de inicialização com logs
+  ESP_LOGI(TAG, "Enviando sequência de inicialização...");
   ssd1306_write_command(SSD1306_CMD_DISPLAY_OFF);
   ssd1306_write_command(SSD1306_CMD_SET_CLOCK_DIV);
   ssd1306_write_command(0x80);
@@ -81,16 +142,30 @@ void ssd1306_init(void) {
   ssd1306_write_command(SSD1306_CMD_NORMAL_DISPLAY);
   ssd1306_write_command(SSD1306_CMD_DISPLAY_ON);
 
-  ESP_LOGI(TAG, "SSD1306 inicializado com sucesso!");
+  vTaskDelay(pdMS_TO_TICKS(10));
+
+  ESP_LOGI(TAG, "=== SSD1306 inicializado ===");
 }
 
 // Limpar buffer
 void ssd1306_clear_buffer(void) {
-  memset(ssd1306_buffer, 0, sizeof(ssd1306_buffer));
+  ESP_LOGI(TAG, "Limpando buffer (tamanho: %d bytes)", sizeof(ssd1306_buffer));
+  memset(ssd1306_buffer, 0x00, sizeof(ssd1306_buffer));
+  ESP_LOGI(TAG, "Buffer limpo!");
 }
 
 // Atualizar display
 void ssd1306_update_display(void) {
+  ESP_LOGI(TAG, "=== Atualizando display ===");
+  
+  // Verificar se há dados no buffer
+  int non_zero_bytes = 0;
+  for (int i = 0; i < sizeof(ssd1306_buffer); i++) {
+    if (ssd1306_buffer[i] != 0) non_zero_bytes++;
+  }
+  ESP_LOGI(TAG, "Buffer tem %d bytes não-zero de %d total", non_zero_bytes, sizeof(ssd1306_buffer));
+  
+  ESP_LOGI(TAG, "Configurando área de escrita...");
   ssd1306_write_command(SSD1306_CMD_SET_COLUMN_ADDR);
   ssd1306_write_command(0);
   ssd1306_write_command(127);
@@ -98,7 +173,49 @@ void ssd1306_update_display(void) {
   ssd1306_write_command(0);
   ssd1306_write_command(7);
 
-  ssd1306_write_data(ssd1306_buffer, sizeof(ssd1306_buffer));
+  ESP_LOGI(TAG, "Enviando buffer para display...");
+  esp_err_t ret = ssd1306_write_data(ssd1306_buffer, sizeof(ssd1306_buffer));
+  
+  if (ret == ESP_OK) {
+    ESP_LOGI(TAG, "=== Display atualizado com SUCESSO ===");
+  } else {
+    ESP_LOGE(TAG, "=== ERRO ao atualizar display ===");
+  }
+}
+
+// Função de teste do display
+void ssd1306_test_pattern(void) {
+  ESP_LOGI(TAG, "=== Iniciando teste de padrões ===");
+  
+  // Teste 1: Tela toda branca
+  ESP_LOGI(TAG, "Teste 1: Tela toda branca");
+  memset(ssd1306_buffer, 0xFF, sizeof(ssd1306_buffer));
+  ssd1306_update_display();
+  vTaskDelay(pdMS_TO_TICKS(3000));
+  
+  // Teste 2: Tela toda preta
+  ESP_LOGI(TAG, "Teste 2: Tela toda preta");
+  memset(ssd1306_buffer, 0x00, sizeof(ssd1306_buffer));
+  ssd1306_update_display();
+  vTaskDelay(pdMS_TO_TICKS(3000));
+  
+  // Teste 3: Padrão xadrez
+  ESP_LOGI(TAG, "Teste 3: Padrão xadrez");
+  for (int i = 0; i < sizeof(ssd1306_buffer); i++) {
+    ssd1306_buffer[i] = (i % 2) ? 0xAA : 0x55;
+  }
+  ssd1306_update_display();
+  vTaskDelay(pdMS_TO_TICKS(3000));
+  
+  // Teste 4: Linhas horizontais
+  ESP_LOGI(TAG, "Teste 4: Linhas horizontais");
+  for (int i = 0; i < sizeof(ssd1306_buffer); i++) {
+    ssd1306_buffer[i] = 0x0F; // 4 pixels ligados, 4 desligados
+  }
+  ssd1306_update_display();
+  vTaskDelay(pdMS_TO_TICKS(3000));
+  
+  ESP_LOGI(TAG, "=== Fim dos testes ===");
 }
 
 // Definir pixel
@@ -113,7 +230,7 @@ void ssd1306_set_pixel(int x, int y, bool on) {
 }
 
 // Função auxiliar para desenhar os 8 pontos simétricos do círculo
-static void ssd1306_draw_circle_points(int cx, int cy, int x, int y) {
+void ssd1306_draw_circle_points(int cx, int cy, int x, int y) {
     ssd1306_set_pixel(cx + x, cy + y, true);
     ssd1306_set_pixel(cx - x, cy + y, true);
     ssd1306_set_pixel(cx + x, cy - y, true);
@@ -168,12 +285,14 @@ void ssd1306_draw_char(int x, int y, char c) {
     for (int j = 0; j < 8; j++) {
       bool pixel = (font8x8[index][i] >> j) & 1;
       ssd1306_set_pixel(x + j, y + i, pixel);
+      vTaskDelay(pdMS_TO_TICKS(1));
     }
   }
 }
 
 // Desenhar string
 void ssd1306_draw_string(int x, int y, const char* str) {
+  ESP_LOGI(TAG, "Desenhando string na posição (%d,%d): \"%s\"", x, y, str);
   while (*str) {
     ssd1306_draw_char(x, y, *str);
     x += 8;

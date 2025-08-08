@@ -12,7 +12,7 @@
       "defines": [
         "ESP_PLATFORM"
       ],
-      "compilerPath": "~/.espressif/tools/xtensa-esp-elf/esp-14.2.0_20241119/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc",
+      "compilerPath": "${config:idf.toolsPath}/tools/xtensa-esp-elf/esp-14.2.0_20241119/xtensa-esp-elf/bin/xtensa-esp32s3-elf-gcc",
       "cStandard": "c11",
       "cppStandard": "c++17",
       "intelliSenseMode": "gcc-x64"

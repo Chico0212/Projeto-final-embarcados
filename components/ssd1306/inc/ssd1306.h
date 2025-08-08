@@ -10,10 +10,10 @@
 #include "font.h"
 
 // Configurações I2C
-#define I2C_MASTER_SCL_IO           9    // GPIO para SCL
-#define I2C_MASTER_SDA_IO           8    // GPIO para SDA
+#define I2C_MASTER_SCL_IO           22    // GPIO para SCL
+#define I2C_MASTER_SDA_IO           21    // GPIO para SDA
 #define I2C_MASTER_NUM              0     // Número da porta I2C
-#define I2C_MASTER_FREQ_HZ          400000 // Frequência I2C
+#define I2C_MASTER_FREQ_HZ          100000 // Frequência I2C
 #define I2C_MASTER_TX_BUF_DISABLE   0
 #define I2C_MASTER_RX_BUF_DISABLE   0
 #define I2C_MASTER_TIMEOUT_MS       1000
@@ -28,7 +28,7 @@
 #define SSD1306_CMD_DISPLAY_OFF     0xAE
 #define SSD1306_CMD_DISPLAY_ON      0xAF
 #define SSD1306_CMD_SET_CONTRAST    0x81
-#define SSD1306_CMD_ENTIRE_DISPLAY_ON 0xA5
+#define SSD1306_CMD_ENTIRE_DISPLAY_ON 0xA4
 #define SSD1306_CMD_NORMAL_DISPLAY  0xA6
 #define SSD1306_CMD_INVERT_DISPLAY  0xA7
 #define SSD1306_CMD_SET_MULTIPLEX   0xA8
@@ -46,7 +46,7 @@
 #define SSD1306_CMD_SET_PAGE_ADDR   0x22
 
 // Buffer do display
-static uint8_t ssd1306_buffer[SSD1306_WIDTH * SSD1306_PAGES];
+// static uint8_t ssd1306_buffer[SSD1306_WIDTH * SSD1306_HEIGHT / SSD1306_PAGES];
 
 // Função para enviar comando I2C
 esp_err_t ssd1306_write_command(uint8_t cmd);
@@ -55,7 +55,7 @@ esp_err_t ssd1306_write_command(uint8_t cmd);
 esp_err_t ssd1306_write_data(uint8_t* data, size_t len);
 
 // Inicializar I2C
-void i2c_init(void);
+esp_err_t i2c_init(void);
 
 // Inicializar display SSD1306
 void ssd1306_init(void);
@@ -70,10 +70,11 @@ void ssd1306_update_display(void);
 void ssd1306_set_pixel(int x, int y, bool on);
 
 // Função auxiliar para desenhar os 8 pontos simétricos do círculo
-static void ssd1306_draw_circle_points(int cx, int cy, int x, int y);
+void ssd1306_draw_circle_points(int cx, int cy, int x, int y);
 
 // Desenhar círculo usando algoritmo de Bresenham
 void ssd1306_draw_circle(int cx, int cy, int radius, bool filled);
+
 // Desenhar caractere
 void ssd1306_draw_char(int x, int y, char c);
 
@@ -85,5 +86,10 @@ void ssd1306_draw_line(int x0, int y0, int x1, int y1);
 
 // Desenhar retângulo
 void ssd1306_draw_rect(int x, int y, int w, int h, bool filled);
+
+// Adicione estas declarações no ssd1306.h
+void i2c_scan(void);
+
+void ssd1306_test_pattern(void);
 
 #endif

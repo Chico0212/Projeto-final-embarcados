@@ -50,7 +50,7 @@ void IRAM_ATTR button_isr_handler(void* arg)
 void draw_title(void)
 {
     // Draw main title with border
-    ssd1306_draw_string(TITLE_CENTER_X, 0, "game menu");
+    ssd1306_draw_string(0, 0, "game menu");
     
     // Draw underline for title
     ssd1306_draw_line(0, TITLE_HEIGHT - 2, DISPLAY_WIDTH - 1, TITLE_HEIGHT - 2);
@@ -79,8 +79,18 @@ void draw_menu_item(int item_index, bool is_selected)
 
 void draw_instructions(void)
 {
-    // Draw control instructions at bottom
-    ssd1306_draw_string(0, INSTRUCTIONS_Y, "up:navigate  select:play");
+    ssd1306_clear_buffer();
+    
+    // Show loading screen
+    ssd1306_draw_string(25, 15, "Red: Navigate");
+    ssd1306_draw_string(10, 30, "Green: Select");
+    
+    // Draw simple loading animation
+    // ssd1306_draw_rect(20, 45, 88, 8, true); // Loading bar border
+    // ssd1306_draw_rect(22, 47, 84, 4, false); // Loading bar fill
+    
+    ssd1306_update_display();
+    vTaskDelay(1500 / portTICK_PERIOD_MS); // Simulate loading
 }
 
 void draw_status_info(void)
@@ -105,9 +115,9 @@ void draw_complete_menu(void)
         draw_menu_item(i, (i == menu_state.current_selection));
     }
     
-    draw_instructions();
     draw_status_info();
     
+    // draw_instructions();
     // Update the physical display
     ssd1306_update_display();
 }
@@ -352,6 +362,8 @@ void menu_task(void* pvParameters)
     
     // Show boot screen
     show_boot_screen();
+
+    draw_instructions();
     
     // Draw initial menu
     draw_complete_menu();

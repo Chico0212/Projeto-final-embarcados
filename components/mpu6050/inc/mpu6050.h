@@ -35,10 +35,10 @@
 #define MPU6050_GYRO_ZOUT_L         0x48
 
 // Configurações I2C
-#define I2C_MASTER_SCL_IO           9      // GPIO do SCL
-#define I2C_MASTER_SDA_IO           8      // GPIO do SDA
+#define I2C_MASTER_SCL_IO           22      // GPIO do SCL
+#define I2C_MASTER_SDA_IO           21      // GPIO do SDA
 #define I2C_MASTER_NUM              I2C_NUM_0
-#define I2C_MASTER_FREQ_HZ          100000  // 100kHz
+#define I2C_MASTER_FREQ_HZ          400000  // 100kHz
 #define I2C_MASTER_TX_BUF_DISABLE   0
 #define I2C_MASTER_RX_BUF_DISABLE   0
 
