@@ -10,6 +10,8 @@
 #include "esp_log.h"
 #include "ssd1306.h"
 #include "mpu6050.h"
+#include "buzzer.h"
+#include "sd_card.h"
 
 // GPIO definitions for buttons
 #define BUTTON_UP_GPIO       GPIO_NUM_40   // Button for navigating up/previous

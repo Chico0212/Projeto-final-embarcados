@@ -10,6 +10,8 @@
 #include "ssd1306.h"
 #include "mpu6050.h"
 #include <stdlib.h>
+#include <buzzer.h>
+#include <sd_card.h>
 
 #define DISPLAY_WIDTH  128
 #define DISPLAY_HEIGHT 64

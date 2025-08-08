@@ -82,15 +82,20 @@ void draw_instructions(void)
     ssd1306_clear_buffer();
     
     // Show loading screen
-    ssd1306_draw_string(25, 15, "Red: Navigate");
-    ssd1306_draw_string(10, 30, "Green: Select");
-    
-    // Draw simple loading animation
-    // ssd1306_draw_rect(20, 45, 88, 8, true); // Loading bar border
-    // ssd1306_draw_rect(22, 47, 84, 4, false); // Loading bar fill
+    ssd1306_draw_string(0, 15, "Red: Navigate");
+    ssd1306_draw_string(0, 30, "Green: Select");
     
     ssd1306_update_display();
-    vTaskDelay(1500 / portTICK_PERIOD_MS); // Simulate loading
+    vTaskDelay(3000 / portTICK_PERIOD_MS); 
+
+    ssd1306_clear_buffer();
+    
+    // Show loading screen
+    ssd1306_draw_string(0, 15, "Press anything");
+    ssd1306_draw_string(0, 30, "to exit the game");
+    
+    ssd1306_update_display();
+    vTaskDelay(3000 / portTICK_PERIOD_MS); 
 }
 
 void draw_status_info(void)
@@ -162,6 +167,7 @@ void launch_game(game_selection_t selected_game)
     switch (selected_game) {
         case GAME_TILT_MAZE:
             start_tilt_maze_game();
+            printf("AAAA");
             break;
         case GAME_DODGE_BLOCKS:
             start_dodge_blocks_game();
@@ -247,9 +253,9 @@ void handle_button_event(button_event_data_t* event_data)
     }
     else if (menu_state.in_game) {
         // Handle in-game controls (return to menu)
-        if (event_data->gpio_num == BUTTON_UP_GPIO) {
+        // if (event_data->gpio_num == BUTTON_UP_GPIO) {
             return_to_menu();
-        }
+        // }
         // SELECT button could be used for game-specific actions
     }
 }

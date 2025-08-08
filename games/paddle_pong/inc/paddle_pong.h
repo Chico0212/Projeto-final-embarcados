@@ -11,6 +11,8 @@
 #include "esp_system.h"
 #include "mpu6050.h"
 #include "ssd1306.h"
+#include "buzzer.h"
+#include "sd_card.h"
 
 // Configurações do jogo
 #define PADDLE_WIDTH 20

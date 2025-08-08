@@ -36,3 +36,5 @@ void buzzer_off();
 void game_win();
 
 void game_lose();
+
+void catch_sound();

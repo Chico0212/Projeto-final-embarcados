@@ -98,3 +98,12 @@ void game_lose() {
   printf("Que pena! Você perdeu!\n");
   buzzer_defeat_melody();
 }
+
+void catch_sound() {
+  // Som rápido e satisfatório quando pega a bola
+  // Sequência ascendente curta que dá sensação de "pegou!"
+  
+  buzzer_play_note(NOTE_E4, SIXTEENTH_NOTE);
+  buzzer_play_note(NOTE_G4, SIXTEENTH_NOTE);
+  buzzer_play_note(NOTE_E5, EIGHTH_NOTE);
+}
