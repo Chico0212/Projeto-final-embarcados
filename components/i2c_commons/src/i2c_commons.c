@@ -12,8 +12,8 @@ typedef enum
   I2C_STATE_ERROR
 } i2c_state_t;
 
-StaticSemaphore_t i2c_mutex_buffer;
-SemaphoreHandle_t i2c_mutex;
+// StaticSemaphore_t i2c_mutex_buffer;
+// SemaphoreHandle_t i2c_mutex;
 
 static i2c_state_t current_i2c_state = I2C_STATE_UNKNOWN;
 static uint32_t i2c_recovery_count = 0;
@@ -35,7 +35,7 @@ esp_err_t i2c_init(void)
       .master.clk_speed = I2C_MASTER_FREQ_HZ,
   };
 
-  i2c_mutex = xSemaphoreCreateMutexStatic(&i2c_mutex_buffer);
+  // i2c_mutex = xSemaphoreCreateMutexStatic(&i2c_mutex_buffer);
 
 
   esp_err_t ret = i2c_param_config(I2C_MASTER_NUM, &conf);

@@ -5,9 +5,7 @@
 #include "esp_log.h"
 #include "esp_event.h"
 
-extern StaticSemaphore_t i2c_mutex_buffer;
-
-extern SemaphoreHandle_t i2c_mutex;
+#define NOTIF_STOP (1UL << 0)
 
 // Configurações I2C
 #define I2C_MASTER_SCL_IO           22    // GPIO para SCL

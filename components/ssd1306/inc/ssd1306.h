@@ -76,4 +76,7 @@ void ssd1306_draw_rect(int x, int y, int w, int h, bool filled);
 
 void ssd1306_test_pattern(void);
 
+
+int ssd1306_get_string_width(const char *str);
+
 #endif

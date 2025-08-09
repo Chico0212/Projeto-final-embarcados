@@ -80,22 +80,3 @@ void read_file(char *path, char *out_content, int size)
     fgets(out_content, size, file);
     fclose(file);
 }
-
-int update_score(char *file_path, int new_score)
-{
-    const int size = 20;
-    char data[size];
-
-    read_file(file_path, data, size);
-
-    int score = atoi(data);
-
-    if (new_score > score)
-    {
-        snprintf(data, size, "%d", score);
-        write_file(file_path, data);
-        read_file(file_path, data, sizeof(data));
-        return 1;
-    }
-    return 0;
-}

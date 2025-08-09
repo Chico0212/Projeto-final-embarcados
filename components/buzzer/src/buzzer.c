@@ -37,48 +37,6 @@ void buzzer_play_note(uint32_t frequency, uint32_t duration_ms) {
   vTaskDelay(50 / portTICK_PERIOD_MS); // Pequena pausa entre notas
 }
 
-void buzzer_victory_melody() {
-  // Melodia de vitória - sequência ascendente e alegre
-  // Baseada em uma progressão triunfante
-  
-  buzzer_play_note(NOTE_C4, EIGHTH_NOTE);
-  buzzer_play_note(NOTE_E4, EIGHTH_NOTE);
-  buzzer_play_note(NOTE_G4, EIGHTH_NOTE);
-  buzzer_play_note(NOTE_C5, QUARTER_NOTE);
-  
-  vTaskDelay(100 / portTICK_PERIOD_MS);
-  
-  buzzer_play_note(NOTE_G4, EIGHTH_NOTE);
-  buzzer_play_note(NOTE_C5, QUARTER_NOTE);
-  
-  vTaskDelay(100 / portTICK_PERIOD_MS);
-  
-  buzzer_play_note(NOTE_E5, EIGHTH_NOTE);
-  buzzer_play_note(NOTE_C5, EIGHTH_NOTE);
-  buzzer_play_note(NOTE_G4, EIGHTH_NOTE);
-  buzzer_play_note(NOTE_C5, QUARTER_NOTE + EIGHTH_NOTE);
-}
-
-void buzzer_defeat_melody() {
-  // Melodia de derrota - sequência descendente e melancólica
-  // Tom mais grave e ritmo mais lento
-  
-  buzzer_play_note(NOTE_G4, QUARTER_NOTE);
-  buzzer_play_note(NOTE_F4, QUARTER_NOTE);
-  buzzer_play_note(NOTE_E4, QUARTER_NOTE);
-  buzzer_play_note(NOTE_D4, QUARTER_NOTE);
-  
-  vTaskDelay(200 / portTICK_PERIOD_MS);
-  
-  buzzer_play_note(NOTE_C4, QUARTER_NOTE + EIGHTH_NOTE);
-  
-  vTaskDelay(300 / portTICK_PERIOD_MS);
-  
-  buzzer_play_note(NOTE_C4, SIXTEENTH_NOTE);
-  buzzer_play_note(NOTE_C4, SIXTEENTH_NOTE);
-  buzzer_play_note(NOTE_C4, QUARTER_NOTE + QUARTER_NOTE);
-}
-
 void buzzer_on() {
   ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, 512); 
   ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0);
@@ -89,38 +47,3 @@ void buzzer_off() {
   ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0);
 }
 
-void game_win() {
-  printf("Parabéns! Você ganhou!\n");
-  buzzer_victory_melody();
-}
-
-void game_lose() {
-  printf("Que pena! Você perdeu!\n");
-  buzzer_defeat_melody();
-}
-
-void catch_sound() {
-  // Som rápido e satisfatório quando pega a bola
-  // Sequência ascendente curta que dá sensação de "pegou!"
-  
-  buzzer_play_note(NOTE_E4, SIXTEENTH_NOTE);
-  buzzer_play_note(NOTE_G4, SIXTEENTH_NOTE);
-  buzzer_play_note(NOTE_E5, EIGHTH_NOTE);
-}
-
-void buzzer_mario_theme() {
-  // Primeira parte da melodia
-  buzzer_play_note(NOTE_E5, EIGHTH_NOTE + SIXTEENTH_NOTE);
-  buzzer_play_note(NOTE_E5, EIGHTH_NOTE + SIXTEENTH_NOTE);
-  vTaskDelay(EIGHTH_NOTE / portTICK_PERIOD_MS);
-  buzzer_play_note(NOTE_E5, EIGHTH_NOTE + SIXTEENTH_NOTE);
-  vTaskDelay(EIGHTH_NOTE / portTICK_PERIOD_MS);
-  buzzer_play_note(NOTE_C5, EIGHTH_NOTE + SIXTEENTH_NOTE);
-  buzzer_play_note(NOTE_E5, EIGHTH_NOTE + SIXTEENTH_NOTE);
-  buzzer_play_note(NOTE_G5, EIGHTH_NOTE + SIXTEENTH_NOTE);
-  vTaskDelay(QUARTER_NOTE / portTICK_PERIOD_MS);
-  
-  // Segunda parte
-  buzzer_play_note(NOTE_G4, EIGHTH_NOTE + SIXTEENTH_NOTE);
-  vTaskDelay(QUARTER_NOTE / portTICK_PERIOD_MS);
-}

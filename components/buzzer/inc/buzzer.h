@@ -45,4 +45,5 @@ void catch_sound();
 
 void buzzer_mario_theme();
 
+void hit_ball();
 #endif

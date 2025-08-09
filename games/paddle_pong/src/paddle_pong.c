@@ -5,11 +5,10 @@ static const char *TAG = "PADDLE_PONG";
 // Variáveis globais do jogo
 static game_state_t game;
 
-const char* PADDLE_PONG_SCORE_FILE = "/files/paddle_pong.txt";
+const char *PADDLE_PONG_SCORE_FILE = "/files/paddle_pong.txt";
 
 TaskHandle_t paddle_pong_game_task_handle;
 
-// Função para inicializar o jogo
 void game_init()
 {
     ESP_LOGI(TAG, "Inicializando jogo...");
@@ -36,7 +35,6 @@ void game_init()
     ESP_LOGI(TAG, "Jogo inicializado!");
 }
 
-// Função para resetar a bola
 void reset_ball()
 {
     game.ball.x = SSD1306_WIDTH / 2;
@@ -47,7 +45,6 @@ void reset_ball()
     game.ball.vy = 2;
 }
 
-// Função para atualizar a posição da raquete baseada no MPU6050
 void update_paddle()
 {
     float ax, ay, az;
@@ -69,7 +66,6 @@ void update_paddle()
     }
 }
 
-// Função para verificar colisão entre bola e raquete
 bool check_paddle_collision()
 {
     return (game.ball.x + game.ball.size >= game.paddle.x &&
@@ -78,7 +74,6 @@ bool check_paddle_collision()
             game.ball.y <= game.paddle.y + game.paddle.height);
 }
 
-// Função para atualizar a física da bola
 void update_ball()
 {
     // Atualizar posição
@@ -103,16 +98,13 @@ void update_ball()
         game.ball.y = 0;
     }
 
-    // Colisão com raquete
     if (check_paddle_collision() && game.ball.vy > 0)
     {
-        catch_sound();
+        hit_ball();
         game.ball.vy = -game.ball.vy;
         game.score += 1;
-
-        // Adicionar efeito baseado na posição de colisão na raquete
         float hit_pos = (game.ball.x - game.paddle.x) / (float)game.paddle.width;
-        game.ball.vx += (hit_pos - 0.5f) * 2.0f; // Efeito de "spin"
+        game.ball.vx += (hit_pos - 0.5f) * 2.0f; 
 
         // Limitar velocidade máxima
         if (game.ball.vx > 12.f)
@@ -136,33 +128,25 @@ void update_ball()
     }
 }
 
-// Função para desenhar o jogo
 void draw_game()
 {
-    // Limpar buffer
     ssd1306_clear_buffer();
 
     if (game.game_over)
     {
-        // Tela de game over
-        ssd1306_draw_string(10, 10, "GAME OVER");
-        char score_str[32];
-        snprintf(score_str, sizeof(score_str), "Score: %d", game.score);
-        ssd1306_draw_string(5, 25, score_str);
+        show_game_over(PADDLE_PONG_SCORE_FILE, game.score);
     }
     else
     {
-        // Desenhar raquete
-                                                                                                                                                                                                                                                                                      
+
         ssd1306_draw_rect(game.paddle.x, game.paddle.y,
                           game.paddle.width, game.paddle.height, true);
 
-        // Desenhar bola
         ssd1306_draw_circle((int)game.ball.x + game.ball.size / 2,
                             (int)game.ball.y + game.ball.size / 2,
                             game.ball.size, true);
 
-        // Desenhar HUD (Score e Vidas)
+        // Desenhar Score e Vidas
         char hud_str[32];
         snprintf(hud_str, sizeof(hud_str), "pt: %d", game.score);
         ssd1306_draw_string(0, 1, hud_str);
@@ -193,11 +177,17 @@ bool check_restart()
 void game_task(void *pvParameters)
 {
     ESP_LOGI(TAG, "Iniciando task do jogo...");
+    uint32_t notif;
 
     while (1)
     {
+        if (xTaskNotifyWait(0, NOTIF_STOP, &notif, 0) == pdTRUE)
+        {
+            break;
+        }
         if (game.game_over)
         {
+            update_score(PADDLE_PONG_SCORE_FILE, game.score) ? game_win() : game_lose();
             break;
         }
 
@@ -209,16 +199,10 @@ void game_task(void *pvParameters)
         // Controle de FPS
         vTaskDelay(pdMS_TO_TICKS(75));
     }
-    
-    if (update_score(PADDLE_PONG_SCORE_FILE, game.score)) {
-        game_win();
-    } else {
-        game_lose();
-    }
+
     vTaskDelete(paddle_pong_game_task_handle);
 }
 
-// Função principal
 void start_paddle_pong_game()
 {
     game_init();

@@ -16,7 +16,8 @@
     "freertos.h": "c",
     "i2c_commons.h": "c",
     "i2c.h": "c",
-    "esp_event.h": "c"
+    "esp_event.h": "c",
+    "utils.h": "c"
   },
   "idf.espIdfPath": "/home/francisco/esp/esp-idf/",
   "idf.toolsPath": "/home/francisco/.espressif",

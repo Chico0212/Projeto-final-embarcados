@@ -12,6 +12,7 @@
 #include "mpu6050.h"
 #include "buzzer.h"
 #include "sd_card.h"
+#include "utils.h"
 
 // Display dimensions (assuming standard SSD1306)
 #define DISPLAY_WIDTH        128
