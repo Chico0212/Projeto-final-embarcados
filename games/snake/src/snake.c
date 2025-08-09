@@ -61,6 +61,7 @@ void snake_game_task(void *)
   float accel[3];
   float unused_gyro[3];
   float unused_temp;
+  char score_text[10];
 
   uint32_t notif;
   while (1)
@@ -72,13 +73,7 @@ void snake_game_task(void *)
     if (game_over)
     {
       update_score(SCORE_FILE_SNAKE, score) ? game_win() : game_lose();
-
-      ssd1306_clear_buffer();
-      ssd1306_draw_string(20, 20, "GAME OVER");
-      char score_text[20];
-      snprintf(score_text, sizeof(score_text), "Score: %d", score);
-      ssd1306_draw_string(20, 35, score_text);
-      ssd1306_update_display();
+      show_game_over(SCORE_FILE_SNAKE, score);
       break;
     }
 
@@ -139,6 +134,9 @@ void snake_game_task(void *)
     }
 
     ssd1306_clear_buffer();
+    snprintf(score_text, sizeof(score_text), "Score: %d", score);
+    ssd1306_draw_string(0, 0, score_text);
+
     for (int i = 0; i < snake_len; i++)
     {
       draw_tile(snake[i].x, snake[i].y, SNAKE_SYMBOL);

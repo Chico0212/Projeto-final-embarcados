@@ -200,9 +200,9 @@ void next_level(void)
   {
     // Jogo completado
     ssd1306_clear_buffer();
-    ssd1306_draw_string(10, 20, "PARABENS!");
-    ssd1306_draw_string(5, 35, "Voce completou");
-    ssd1306_draw_string(15, 50, "todas as fases!");
+    ssd1306_draw_string(0, 20, "PARABENS!");
+    ssd1306_draw_string(0, 35, "Voce completou");
+    ssd1306_draw_string(0, 50, "todas as fases!");
     ssd1306_update_display();
     return;
   }
@@ -217,8 +217,8 @@ void next_level(void)
   ssd1306_clear_buffer();
   char level_msg[30];
   snprintf(level_msg, sizeof(level_msg), "FASE %d", current_level + 1);
-  ssd1306_draw_string(40, 20, level_msg);
-  ssd1306_draw_string(10, 35, "Chegue ate a bolinha!");
+  ssd1306_draw_string(0, 20, level_msg);
+  ssd1306_draw_string(0, 35, "Chegue ao alvo!");
   ssd1306_update_display();
 
   vTaskDelay(pdMS_TO_TICKS(2000)); // Mostra mensagem por 2 segundos
@@ -229,8 +229,8 @@ void level_complete(void)
 {
   // Efeito de vitória da fase
   ssd1306_clear_buffer();
-  ssd1306_draw_string(25, 20, "FASE COMPLETA!");
-  ssd1306_draw_string(20, 35, "Proximo nivel...");
+  ssd1306_draw_string(0, 20, "FASE COMPLETA!");
+  ssd1306_draw_string(0, 35, "Proximo nivel...");
   ssd1306_update_display();
 
   // Buzzer de vitória (se disponível)
@@ -281,9 +281,9 @@ void tilt_maze_task(void *pvParameters)
       {
         // Último nível completado
         ssd1306_clear_buffer();
-        ssd1306_draw_string(10, 15, "JOGO COMPLETO!");
-        ssd1306_draw_string(5, 25, "Voce e um mestre");
-        ssd1306_draw_string(15, 45, "do labirinto!");
+        ssd1306_draw_string(0, 15, "JOGO COMPLETO!");
+        ssd1306_draw_string(0, 35, "Voce e um mestre");
+        ssd1306_draw_string(0, 50, "do labirinto!");
         ssd1306_update_display();
 
         // buzzer_beep();

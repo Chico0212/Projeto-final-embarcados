@@ -7,10 +7,10 @@ static button_state_t button_states[2] = {
     {false, false, 0, 0, false}};
 
 static const char *menu_items[MAX_MENU_ITEMS] = {
-    "tilt maze",
-    "dodge the blocks",
-    "snake tilt",
-    "paddle pong"};
+    "Tilt maze",
+    "Dodge the blocks",
+    "Snake tilt",
+    "Paddle pong"};
 
 static QueueHandle_t button_queue = NULL;
 
@@ -49,7 +49,7 @@ void IRAM_ATTR button_isr_handler(void *arg) // pode ir pra lib dos botões tran
 void draw_title(void)
 {
     // Draw main title with border
-    ssd1306_draw_string(0, 0, "game menu");
+    ssd1306_draw_string(0, 0, "Game menu");
 
     // Draw underline for title
     ssd1306_draw_line(0, TITLE_HEIGHT - 2, DISPLAY_WIDTH - 1, TITLE_HEIGHT - 2);
@@ -138,12 +138,12 @@ void show_game_loading(game_selection_t game)
     ssd1306_clear_buffer();
 
     // Show loading screen
-    ssd1306_draw_string(25, 15, "loading...");
-    ssd1306_draw_string(10, 30, menu_items[game]);
+    ssd1306_draw_string(0, 15, "Loading...");
+    ssd1306_draw_string(0, 30, menu_items[game]);
 
     // Draw simple loading animation
-    ssd1306_draw_rect(20, 45, 88, 8, true);  // Loading bar border
-    ssd1306_draw_rect(22, 47, 84, 4, false); // Loading bar fill
+    ssd1306_draw_rect(0, 45, 88, 8, true);  // Loading bar border
+    ssd1306_draw_rect(0, 47, 84, 4, false); // Loading bar fill
 
     ssd1306_update_display();
     vTaskDelay(1500 / portTICK_PERIOD_MS); // Simulate loading
@@ -151,7 +151,7 @@ void show_game_loading(game_selection_t game)
 
 void launch_game(game_selection_t selected_game)
 {
-    ESP_LOGI("menu", "launching game: %s", menu_items[selected_game]);
+    ESP_LOGI("menu", "Launching game: %s", menu_items[selected_game]);
 
     show_game_loading(selected_game);
 
@@ -315,9 +315,9 @@ void show_boot_screen(void)
     ssd1306_clear_buffer();
 
     // Boot animation
-    ssd1306_draw_string(20, 15, "game console");
-    ssd1306_draw_string(35, 30, "v1.0");
-    ssd1306_draw_string(25, 45, "loading...");
+    ssd1306_draw_string(0, 15, "Game console");
+    ssd1306_draw_string(0, 30, "v1.0");
+    ssd1306_draw_string(0, 45, "Loading...");
 
     ssd1306_update_display();
     vTaskDelay(2000 / portTICK_PERIOD_MS);

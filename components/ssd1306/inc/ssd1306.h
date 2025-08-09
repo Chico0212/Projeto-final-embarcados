@@ -13,6 +13,8 @@
 #define SSD1306_WIDTH               128
 #define SSD1306_HEIGHT              64
 #define SSD1306_PAGES               8     // 64/8 = 8 páginas
+#define SSD1306_FONT_WIDTH          8     // Largura da fonte
+#define SSD1306_WIDTH_IN_CHARS      16    // Largura total / largura da letra == 128 / 8
 
 // Comandos do SSD1306
 #define SSD1306_CMD_DISPLAY_OFF     0xAE

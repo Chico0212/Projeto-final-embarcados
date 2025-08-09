@@ -123,8 +123,8 @@ void dodge_blocks_game_task(void *)
             draw_block(&blocks[i]);
         char score_text[16];
 
-        snprintf(score_text, sizeof(score_text), "%d", score);
-        ssd1306_draw_string(DISPLAY_WIDTH - 30, 0, score_text);
+        snprintf(score_text, sizeof(score_text), "Score: %d", score);
+        ssd1306_draw_string(0, 0, score_text);
         ssd1306_update_display();
         vTaskDelay(pdMS_TO_TICKS(100));
     }

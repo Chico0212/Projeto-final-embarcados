@@ -101,7 +101,7 @@ int update_score(const char *file_path, int new_score)
 
     if (new_score > score)
     {
-        snprintf(data, size, "%d", score);
+        snprintf(data, size, "%d", new_score);
         write_file(file_path, data);
         read_file(file_path, data, sizeof(data));
         return 1;

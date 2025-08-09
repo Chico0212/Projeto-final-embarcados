@@ -58,13 +58,15 @@ void write_file(char *path, char *data)
     FILE *file = fopen(path, "w");
     if (file == NULL)
     {
-        ESP_LOGE(SD_CARD_TAG, "Falha ao criar o arquivo");
+        ESP_LOGE(SD_CARD_TAG, "Falha ao criar o arquivo: %s", path);
         return;
     }
 
+    ESP_LOGI(SD_CARD_TAG, "Escrevendo arquivo no path: %s", path);
     fprintf(file, data);
     fprintf(file, EOL);
     fclose(file);
+    ESP_LOGI(SD_CARD_TAG, "Arquivo criado com sucesso");
 }
 
 void read_file(char *path, char *out_content, int size)
@@ -72,11 +74,15 @@ void read_file(char *path, char *out_content, int size)
     FILE *file = fopen(path, "r");
     if (file == NULL)
     {
-        ESP_LOGE(SD_CARD_TAG, "Falha ao criar o arquivo");
+        ESP_LOGE(SD_CARD_TAG, "Falha ao ler o arquivo: %s", path);
         write_file(path, "0");
         return;
     }
 
+    ESP_LOGI(SD_CARD_TAG, "Lendo arquivo no path: %s", path);
+    
     fgets(out_content, size, file);
     fclose(file);
+
+    ESP_LOGI(SD_CARD_TAG, "Arquivo lido com sucesso, conteúdo: %s", out_content);
 }

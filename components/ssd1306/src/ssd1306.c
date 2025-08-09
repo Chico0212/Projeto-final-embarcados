@@ -156,9 +156,9 @@ void ssd1306_test_pattern(void) {
 void ssd1306_set_pixel(int x, int y, bool on) {
   if (x >= 0 && x < SSD1306_WIDTH && y >= 0 && y < SSD1306_HEIGHT) {
     if (on) {
-      ssd1306_buffer[x + (y / 8) * SSD1306_WIDTH] |= (1 << (y % 8));
+      ssd1306_buffer[x + (y / SSD1306_FONT_WIDTH) * SSD1306_WIDTH] |= (1 << (y % SSD1306_FONT_WIDTH));
     } else {
-      ssd1306_buffer[x + (y / 8) * SSD1306_WIDTH] &= ~(1 << (y % 8));
+      ssd1306_buffer[x + (y / SSD1306_FONT_WIDTH) * SSD1306_WIDTH] &= ~(1 << (y % SSD1306_FONT_WIDTH));
     }
   }
 }
@@ -215,8 +215,8 @@ void ssd1306_draw_char(int x, int y, char c) {
   if (c < 32 || c > 126) c = 32; // Espaço para caracteres inválidos
   int index = c;
 
-  for (int i = 0; i < 8; i++) {
-    for (int j = 0; j < 8; j++) {
+  for (int i = 0; i < SSD1306_FONT_WIDTH; i++) {
+    for (int j = 0; j < SSD1306_FONT_WIDTH; j++) {
       bool pixel = (font8x8[index][i] >> j) & 1;
       ssd1306_set_pixel(x + j, y + i, pixel);
       vTaskDelay(pdMS_TO_TICKS(1));
@@ -229,7 +229,7 @@ void ssd1306_draw_string(int x, int y, const char* str) {
   ESP_LOGI(TAG, "Desenhando string na posição (%d,%d): \"%s\"", x, y, str);
   while (*str) {
     ssd1306_draw_char(x, y, *str);
-    x += 8;
+    x += SSD1306_FONT_WIDTH;
     str++;
   }
 }

@@ -5,7 +5,7 @@ static const char *TAG = "PADDLE_PONG";
 // Variáveis globais do jogo
 static game_state_t game;
 
-const char *PADDLE_PONG_SCORE_FILE = "/files/paddle_pong.txt";
+const char *PADDLE_PONG_SCORE_FILE = "/files/pong.txt";
 
 TaskHandle_t paddle_pong_game_task_handle;
 
@@ -104,7 +104,7 @@ void update_ball()
         game.ball.vy = -game.ball.vy;
         game.score += 1;
         float hit_pos = (game.ball.x - game.paddle.x) / (float)game.paddle.width;
-        game.ball.vx += (hit_pos - 0.5f) * 2.0f; 
+        game.ball.vx += (hit_pos - 0.5f) * 2.0f;
 
         // Limitar velocidade máxima
         if (game.ball.vx > 12.f)
@@ -132,30 +132,24 @@ void draw_game()
 {
     ssd1306_clear_buffer();
 
-    if (game.game_over)
-    {
-        show_game_over(PADDLE_PONG_SCORE_FILE, game.score);
-    }
-    else
-    {
+    ssd1306_draw_rect(game.paddle.x, game.paddle.y,
+                      game.paddle.width, game.paddle.height, true);
 
-        ssd1306_draw_rect(game.paddle.x, game.paddle.y,
-                          game.paddle.width, game.paddle.height, true);
+    ssd1306_draw_circle((int)game.ball.x + game.ball.size / 2,
+                        (int)game.ball.y + game.ball.size / 2,
+                        game.ball.size, true);
 
-        ssd1306_draw_circle((int)game.ball.x + game.ball.size / 2,
-                            (int)game.ball.y + game.ball.size / 2,
-                            game.ball.size, true);
+    // Desenhar Score e Vidas
+    char hud_str[32];
+    snprintf(hud_str, sizeof(hud_str), "Pts: %d", game.score);
+    ssd1306_draw_string(0, 1, hud_str);
 
-        // Desenhar Score e Vidas
-        char hud_str[32];
-        snprintf(hud_str, sizeof(hud_str), "pt: %d", game.score);
-        ssd1306_draw_string(0, 1, hud_str);
+    snprintf(hud_str, sizeof(hud_str), "Vida: %d", game.lives);
 
-        snprintf(hud_str, sizeof(hud_str), "vida: %d", game.lives);
-        ssd1306_draw_string(50, 0, hud_str);
+    int placement = SSD1306_WIDTH - strlen(hud_str) * 8;
+    ssd1306_draw_string(placement, 0, hud_str);
 
-        ssd1306_draw_line(0, 10, SSD1306_WIDTH - 1, 10);
-    }
+    ssd1306_draw_line(0, 10, SSD1306_WIDTH - 1, 10);
 
     ssd1306_update_display();
     // game_lose();
@@ -188,6 +182,7 @@ void game_task(void *pvParameters)
         if (game.game_over)
         {
             update_score(PADDLE_PONG_SCORE_FILE, game.score) ? game_win() : game_lose();
+            show_game_over(PADDLE_PONG_SCORE_FILE, game.score);
             break;
         }
 
