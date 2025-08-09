@@ -9,7 +9,6 @@
 #include "esp_log.h"
 #include "esp_err.h"
 
-// Definições do MPU6050
 #define MPU6050_ADDR                0x68    // Endereço I2C padrão do MPU6050
 #define MPU6050_PWR_MGMT_1          0x6B    // Registro de gerenciamento de energia
 #define MPU6050_SMPLRT_DIV          0x19    // Sample Rate Divider
@@ -18,7 +17,6 @@
 #define MPU6050_ACCEL_CONFIG        0x1C    // Configuração do acelerômetro
 #define MPU6050_WHO_AM_I            0x75    // Registro de identificação
 
-// Registros de dados
 #define MPU6050_ACCEL_XOUT_H        0x3B
 #define MPU6050_ACCEL_XOUT_L        0x3C
 #define MPU6050_ACCEL_YOUT_H        0x3D
@@ -34,7 +32,6 @@
 #define MPU6050_GYRO_ZOUT_H         0x47
 #define MPU6050_GYRO_ZOUT_L         0x48
 
-// Configurações I2C
 #define I2C_MASTER_SCL_IO           22      // GPIO do SCL
 #define I2C_MASTER_SDA_IO           21      // GPIO do SDA
 #define I2C_MASTER_NUM              I2C_NUM_0
@@ -42,7 +39,6 @@
 #define I2C_MASTER_TX_BUF_DISABLE   0
 #define I2C_MASTER_RX_BUF_DISABLE   0
 
-// Estrutura para armazenar os dados do sensor
 typedef struct {
     int16_t accel_x;
     int16_t accel_y;
@@ -53,22 +49,16 @@ typedef struct {
     int16_t gyro_z;
 } mpu6050_data_t;
 
-// Função para inicializar o I2C
 esp_err_t i2c_master_init(void);
 
-// Função para escrever um byte no MPU6050
 esp_err_t mpu6050_write_byte(uint8_t reg_addr, uint8_t data);
 
-// Função para ler um byte do MPU6050
 esp_err_t mpu6050_read_byte(uint8_t reg_addr, uint8_t *data);
 
-// Função para ler múltiplos bytes do MPU6050
 esp_err_t mpu6050_read_bytes(uint8_t reg_addr, uint8_t *data, size_t len);
 
-// Função para inicializar o MPU6050
 esp_err_t mpu6050_init(void);
 
-// Função para ler todos os dados do sensor
 esp_err_t mpu6050_read_all(mpu6050_data_t *data);
 
 void mpu6050_convert_data(mpu6050_data_t *raw_data, float *accel_g, float *gyro_dps, float *temp_c);

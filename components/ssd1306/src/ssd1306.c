@@ -2,11 +2,8 @@
 
 static const char *TAG = "SSD1306";
 
-// Buffer do display
-// static uint8_t ssd1306_buffer[SSD1306_WIDTH * SSD1306_PAGES];
 static uint8_t ssd1306_buffer[SSD1306_WIDTH * SSD1306_HEIGHT / SSD1306_PAGES];
 
-// Função para enviar comando I2C
 esp_err_t ssd1306_write_command(uint8_t cmd) {
   ESP_LOGD(TAG, "Enviando comando: 0x%02X", cmd);
   i2c_cmd_handle_t cmd_link = i2c_cmd_link_create();
@@ -26,7 +23,6 @@ esp_err_t ssd1306_write_command(uint8_t cmd) {
   return ret;
 }
 
-// Função para enviar dados I2C
 esp_err_t ssd1306_write_data(uint8_t* data, size_t len) {
   ESP_LOGI(TAG, "Enviando %d bytes de dados", len);
   i2c_cmd_handle_t cmd_link = i2c_cmd_link_create();
@@ -49,7 +45,6 @@ esp_err_t ssd1306_write_data(uint8_t* data, size_t len) {
   return ret;
 }
 
-// Função para escanear dispositivos I2C
 void i2c_scan(void) {
   ESP_LOGI(TAG, "=== Escaneando dispositivos I2C ===");
   int devices_found = 0;
@@ -77,7 +72,6 @@ void i2c_scan(void) {
   ESP_LOGI(TAG, "=== Fim do scan I2C ===");
 }
 
-// Inicializar I2C
 esp_err_t i2c_init(void) {
   ESP_LOGI(TAG, "Inicializando I2C...");
   ESP_LOGI(TAG, "SDA: GPIO%d, SCL: GPIO%d", I2C_MASTER_SDA_IO, I2C_MASTER_SCL_IO);
@@ -108,7 +102,6 @@ esp_err_t i2c_init(void) {
   return ret;
 }
 
-// Inicializar display SSD1306
 void ssd1306_init(void) {
   ESP_LOGI(TAG, "=== Inicializando SSD1306 ===");
   ESP_LOGI(TAG, "Endereço I2C: 0x%02X", SSD1306_I2C_ADDR);
@@ -147,14 +140,12 @@ void ssd1306_init(void) {
   ESP_LOGI(TAG, "=== SSD1306 inicializado ===");
 }
 
-// Limpar buffer
 void ssd1306_clear_buffer(void) {
   ESP_LOGI(TAG, "Limpando buffer (tamanho: %d bytes)", sizeof(ssd1306_buffer));
   memset(ssd1306_buffer, 0x00, sizeof(ssd1306_buffer));
   ESP_LOGI(TAG, "Buffer limpo!");
 }
 
-// Atualizar display
 void ssd1306_update_display(void) {
   ESP_LOGI(TAG, "=== Atualizando display ===");
   
@@ -183,7 +174,6 @@ void ssd1306_update_display(void) {
   }
 }
 
-// Função de teste do display
 void ssd1306_test_pattern(void) {
   ESP_LOGI(TAG, "=== Iniciando teste de padrões ===");
   
@@ -218,7 +208,6 @@ void ssd1306_test_pattern(void) {
   ESP_LOGI(TAG, "=== Fim dos testes ===");
 }
 
-// Definir pixel
 void ssd1306_set_pixel(int x, int y, bool on) {
   if (x >= 0 && x < SSD1306_WIDTH && y >= 0 && y < SSD1306_HEIGHT) {
     if (on) {
@@ -229,7 +218,6 @@ void ssd1306_set_pixel(int x, int y, bool on) {
   }
 }
 
-// Função auxiliar para desenhar os 8 pontos simétricos do círculo
 void ssd1306_draw_circle_points(int cx, int cy, int x, int y) {
     ssd1306_set_pixel(cx + x, cy + y, true);
     ssd1306_set_pixel(cx - x, cy + y, true);
@@ -241,7 +229,6 @@ void ssd1306_draw_circle_points(int cx, int cy, int x, int y) {
     ssd1306_set_pixel(cx - y, cy - x, true);
 }
 
-// Desenhar círculo usando algoritmo de Bresenham
 void ssd1306_draw_circle(int cx, int cy, int radius, bool filled) {
     if (filled) {
         // Círculo preenchido
@@ -276,7 +263,6 @@ void ssd1306_draw_circle(int cx, int cy, int radius, bool filled) {
     }
 }
 
-// Desenhar caractere
 void ssd1306_draw_char(int x, int y, char c) {
   if (c < 32 || c > 126) c = 32; // Espaço para caracteres inválidos
   int index = c;
@@ -290,7 +276,6 @@ void ssd1306_draw_char(int x, int y, char c) {
   }
 }
 
-// Desenhar string
 void ssd1306_draw_string(int x, int y, const char* str) {
   ESP_LOGI(TAG, "Desenhando string na posição (%d,%d): \"%s\"", x, y, str);
   while (*str) {
@@ -300,7 +285,6 @@ void ssd1306_draw_string(int x, int y, const char* str) {
   }
 }
 
-// Desenhar linha
 void ssd1306_draw_line(int x0, int y0, int x1, int y1) {
   int dx = abs(x1 - x0);
   int dy = abs(y1 - y0);
@@ -325,7 +309,6 @@ void ssd1306_draw_line(int x0, int y0, int x1, int y1) {
   }
 }
 
-// Desenhar retângulo
 void ssd1306_draw_rect(int x, int y, int w, int h, bool filled) {
   if (filled) {
     for (int i = x; i < x + w; i++) {

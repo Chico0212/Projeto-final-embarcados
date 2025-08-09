@@ -2,13 +2,11 @@
 
 static const char* TAG = "BUTTONS";
 
-// Variáveis globais
 static QueueHandle_t button_event_queue = NULL;
 static button_config_t button_configs[MAX_BUTTONS];
 static int num_buttons_configured = 0;
 static bool buttons_initialized = false;
 
-// Função ISR genérica
 static void IRAM_ATTR button_isr_handler(void* arg) {
     gpio_num_t gpio_num = (gpio_num_t)(int)arg;
     button_event_data_t event_data = {
@@ -235,7 +233,6 @@ esp_err_t buttons_deinit(void) {
     return ESP_OK;
 }
 
-// Funções de configuração rápida
 esp_err_t button_init_pullup(gpio_num_t gpio_num, button_isr_callback_t callback) {
     gpio_config_t gpio_conf = {
         .pin_bit_mask = (1ULL << gpio_num),

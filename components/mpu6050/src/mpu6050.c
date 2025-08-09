@@ -2,7 +2,6 @@
 
 static const char *TAG = "MPU6050";
 
-// Função para inicializar o I2C
 esp_err_t i2c_master_init(void)
 {
     i2c_config_t conf = {
@@ -25,7 +24,6 @@ esp_err_t i2c_master_init(void)
                               I2C_MASTER_TX_BUF_DISABLE, 0);
 }
 
-// Função para escrever um byte no MPU6050
 esp_err_t mpu6050_write_byte(uint8_t reg_addr, uint8_t data)
 {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
@@ -41,7 +39,6 @@ esp_err_t mpu6050_write_byte(uint8_t reg_addr, uint8_t data)
     return ret;
 }
 
-// Função para ler um byte do MPU6050
 esp_err_t mpu6050_read_byte(uint8_t reg_addr, uint8_t *data)
 {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
@@ -59,7 +56,6 @@ esp_err_t mpu6050_read_byte(uint8_t reg_addr, uint8_t *data)
     return ret;
 }
 
-// Função para ler múltiplos bytes do MPU6050
 esp_err_t mpu6050_read_bytes(uint8_t reg_addr, uint8_t *data, size_t len)
 {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
@@ -82,7 +78,6 @@ esp_err_t mpu6050_read_bytes(uint8_t reg_addr, uint8_t *data, size_t len)
     return ret;
 }
 
-// Função para inicializar o MPU6050
 esp_err_t mpu6050_init(void)
 {
     esp_err_t ret;
@@ -152,7 +147,6 @@ esp_err_t mpu6050_init(void)
     return ESP_OK;
 }
 
-// Função para ler todos os dados do sensor
 esp_err_t mpu6050_read_all(mpu6050_data_t *data)
 {
     uint8_t buffer[14];
@@ -175,7 +169,6 @@ esp_err_t mpu6050_read_all(mpu6050_data_t *data)
     return ESP_OK;
 }
 
-// Função para converter dados brutos em valores físicos
 void mpu6050_convert_data(mpu6050_data_t *raw_data, float *accel_g, float *gyro_dps, float *temp_c)
 {
     // Converter aceleração para g (±2g range, 16-bit)
@@ -197,7 +190,6 @@ void mpu6050_convert_data(mpu6050_data_t *raw_data, float *accel_g, float *gyro_
              *temp_c);
 }
 
-// Task principal para leitura contínua do sensor
 void mpu6050_task(void *pvParameters)
 {
     mpu6050_data_t sensor_data;
@@ -229,7 +221,6 @@ void mpu6050_task(void *pvParameters)
     }
 }
 
-// Lê aceleração
 esp_err_t mpu6050_read_acceleration(float *ax, float *ay, float *az)
 {
     mpu6050_data_t raw;

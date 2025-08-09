@@ -8,12 +8,10 @@
 #include "esp_log.h"
 #include "esp_timer.h"
 
-// Definições de constantes
 #define BUTTON_DEBOUNCE_TIME_MS     50
 #define BUTTON_LONG_PRESS_TIME_MS   1000
 #define MAX_BUTTONS                 8
 
-// Enumeração para eventos de botão
 typedef enum {
     BUTTON_EVENT_PRESSED,
     BUTTON_EVENT_RELEASED,
@@ -21,17 +19,14 @@ typedef enum {
     BUTTON_EVENT_DOUBLE_CLICK
 } button_event_t;
 
-// Estrutura para dados do evento
 typedef struct {
     gpio_num_t gpio_num;
     button_event_t event;
     uint32_t timestamp;
 } button_event_data_t;
 
-// Tipo de função callback para ISR
 typedef void (*button_isr_callback_t)(gpio_num_t gpio_num, button_event_t event);
 
-// Estrutura de configuração de botão
 typedef struct {
     gpio_num_t gpio_num;
     gpio_pull_mode_t pull_mode;
@@ -41,7 +36,6 @@ typedef struct {
     button_isr_callback_t callback;
 } button_config_t;
 
-// Funções principais
 esp_err_t init_buttons(gpio_config_t* gpio_button_config);
 
 
@@ -63,7 +57,6 @@ esp_err_t button_clear_events(void);
 
 esp_err_t buttons_deinit(void);
 
-// Funções auxiliares para configuração rápida
 esp_err_t button_init_pullup(gpio_num_t gpio_num, button_isr_callback_t callback);
 
 esp_err_t button_init_pulldown(gpio_num_t gpio_num, button_isr_callback_t callback);
