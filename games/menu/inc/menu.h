@@ -15,6 +15,7 @@
 #include "dodge.h"
 #include "snake.h"
 #include "buzzer.h"
+#include "i2c_commons.h"
 
 #define BUTTON_NAV_GPIO       GPIO_NUM_25   // Button for navigating up/previous
 #define BUTTON_SELECT_GPIO   GPIO_NUM_26   // Button for selecting/confirming

@@ -184,7 +184,8 @@ void mpu6050_convert_data(mpu6050_data_t *raw_data, float *accel_g, float *gyro_
     // Converter temperatura para °C
     *temp_c = (float)raw_data->temp / 340.0f + 36.53f;
 
-    ESP_LOGI(TAG, "Accel:\n\t x: %.2f\n\t y: %.2f\n\t z: %.2f\nRot:\n\t x: %.2f\n\t y: %.2f\n\t z: %.2f\nTemp: %.2fC°",
+    ESP_LOGI(TAG, "Dados convertidos com sucesso");
+    ESP_LOGD(TAG, "Accel:\n\t x: %.2f\n\t y: %.2f\n\t z: %.2f\nRot:\n\t x: %.2f\n\t y: %.2f\n\t z: %.2f\nTemp: %.2fC°",
              accel_g[0], accel_g[1], accel_g[2],
              gyro_dps[0], gyro_dps[1], gyro_dps[2],
              *temp_c);

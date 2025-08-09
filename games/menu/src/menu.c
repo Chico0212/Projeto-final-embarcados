@@ -7,10 +7,10 @@ static button_state_t button_states[2] = {
     {false, false, 0, 0, false}};
 
 static const char *menu_items[MAX_MENU_ITEMS] = {
-    "tilt maze",
-    "dodge the blocks",
-    "snake tilt",
-    "paddle pong"};
+    "Tilt maze",
+    "Dodge the blocks",
+    "Snake tilt",
+    "Paddle pong"};
 
 static QueueHandle_t button_queue = NULL;
 
@@ -23,7 +23,7 @@ void IRAM_ATTR button_isr_handler(void *arg) // pode ir pra lib dos botões tran
 
     TickType_t current_time = xTaskGetTickCountFromISR();
 
-    if ((current_time - last_isr_time[button_index]) < pdMS_TO_TICKS(50))
+    if ((current_time - last_isr_time[button_index]) < pdMS_TO_TICKS(BUTTON_DEBOUNCE_MS))
     {
         return;
     }
@@ -48,7 +48,7 @@ void IRAM_ATTR button_isr_handler(void *arg) // pode ir pra lib dos botões tran
 void draw_title(void)
 {
     // Draw main title with border
-    ssd1306_draw_string(0, 0, "game menu");
+    ssd1306_draw_string(0, 0, "Game menu");
 
     // Draw underline for title
     ssd1306_draw_line(0, TITLE_HEIGHT - 2, DISPLAY_WIDTH - 1, TITLE_HEIGHT - 2);
@@ -136,12 +136,12 @@ void show_game_loading(game_selection_t game)
     ssd1306_clear_buffer();
 
     // Show loading screen
-    ssd1306_draw_string(25, 15, "loading...");
-    ssd1306_draw_string(10, 30, menu_items[game]);
+    ssd1306_draw_string(0, 15, "Loading...");
+    ssd1306_draw_string(0, 30, menu_items[game]);
 
     // Draw simple loading animation
-    ssd1306_draw_rect(20, 45, 88, 8, true);  // Loading bar border
-    ssd1306_draw_rect(22, 47, 84, 4, false); // Loading bar fill
+    ssd1306_draw_rect(0, 45, 88, 8, true);  // Loading bar border
+    ssd1306_draw_rect(0, 47, 84, 4, false); // Loading bar fill
 
     ssd1306_update_display();
     vTaskDelay(1500 / portTICK_PERIOD_MS); // Simulate loading
@@ -149,21 +149,13 @@ void show_game_loading(game_selection_t game)
 
 void launch_game(game_selection_t selected_game)
 {
-    ESP_LOGI("menu", "launching game: %s", menu_items[selected_game]);
+    ESP_LOGI("menu", "Launching game: %s", menu_items[selected_game]);
 
     show_game_loading(selected_game);
-
-    // Show game placeholder screen
-    ssd1306_clear_buffer();
-    ssd1306_draw_string(0, 5, "Now playing:");
-    ssd1306_draw_string(0, 20, menu_items[selected_game]);
-    ssd1306_draw_line(0, 47, DISPLAY_WIDTH - 1, 47);
-    ssd1306_update_display();
 
     menu_state.in_game = true;
     menu_state.menu_active = false;
 
-    // TODO: Here you would call the actual game functions
     switch (selected_game)
     {
     case GAME_TILT_MAZE:
@@ -181,65 +173,53 @@ void launch_game(game_selection_t selected_game)
     }
 }
 
-const char* get_task_state(eTaskState state) {
-    switch (state) {
-        case eRunning:   return "Running";
-        case eReady:     return "Ready";
-        case eBlocked:   return "Blocked";
-        case eSuspended: return "Suspended";
-        case eDeleted:   return "Deleted";
-        case eInvalid:   return "Invalid";
-        default:         return "Unknown";
+const char *get_task_state(eTaskState state)
+{
+    switch (state)
+    {
+    case eRunning:
+        return "Running";
+    case eReady:
+        return "Ready";
+    case eBlocked:
+        return "Blocked";
+    case eSuspended:
+        return "Suspended";
+    case eDeleted:
+        return "Deleted";
+    case eInvalid:
+        return "Invalid";
+    default:
+        return "Unknown";
     }
 }
 
-bool is_task_safe_to_delete(TaskHandle_t task) {
-    if (task == NULL) {
+bool is_task_safe_to_delete(TaskHandle_t task)
+{
+    if (task == NULL)
+    {
         return false;
     }
-    
-    // Verifica se a task ainda existe no sistema
+
     eTaskState state = eTaskGetState(task);
     return (state != eDeleted && state != eInvalid);
 }
 
-void kill_task_safely(TaskHandle_t *task_ptr) {
-    if (task_ptr == NULL || *task_ptr == NULL) {
-        ESP_LOGI("MENU", "Task handle é NULL ou inválido");
-        return;
+void kill_task_safely(TaskHandle_t task)
+{
+    if (task) {
+        xTaskNotify(task, NOTIF_STOP, eSetBits);
     }
-    
-    TaskHandle_t task = *task_ptr;
-    
-    // Verificação adicional de segurança
-    if (!is_task_safe_to_delete(task)) {
-        ESP_LOGI("MENU", "Task não é segura para deletar ou já foi deletada");
-        *task_ptr = NULL;
-        return;
-    }
-    
-    ESP_LOGI("MENU", "Iniciando deleção da task");
-    
-    // Deleta a task
-    vTaskDelete(task);
-    
-    // Zera o handle imediatamente
-    *task_ptr = NULL;
-    
-    // Dá tempo para o idle task limpar
-    vTaskDelay(pdMS_TO_TICKS(100));
-    
-    ESP_LOGI("MENU", "Task deletada com sucesso");
 }
 
 void return_to_menu(void)
 {
     ESP_LOGI("MENU", "Returning to main menu");
 
-    kill_task_safely(&tilt_maze_task_handle);
-    kill_task_safely(&dodge_blocks_game_task_handle);
-    kill_task_safely(&paddle_pong_game_task_handle);
-    kill_task_safely(&snake_game_task_handle);
+    kill_task_safely(tilt_maze_task_handle);
+    kill_task_safely(dodge_blocks_game_task_handle);
+    kill_task_safely(paddle_pong_game_task_handle);
+    kill_task_safely(snake_game_task_handle);
 
     ESP_LOGI("MENU", "Task finalizada com sucesso");
 
@@ -248,58 +228,6 @@ void return_to_menu(void)
 
     // Redraw the menu
     draw_complete_menu();
-}
-
-bool is_button_pressed_debounced(gpio_num_t gpio_num) // pode ir pra lib
-{
-    int button_index = (gpio_num == BUTTON_NAV_GPIO) ? 0 : 1;
-    bool raw_state = !gpio_get_level(gpio_num); // Inverted due to pull-up
-    TickType_t current_time = xTaskGetTickCount();
-
-    button_state_t *btn = &button_states[button_index];
-
-    // Detecta mudança de estado
-    if (raw_state != btn->last_state)
-    {
-        btn->last_state = raw_state;
-
-        if (raw_state)
-        {
-            // Botão foi pressionado
-            btn->last_press_time = current_time;
-            btn->press_processed = false;
-        }
-        else
-        {
-            // Botão foi solto
-            btn->last_release_time = current_time;
-        }
-        return false; // Ainda no período de debounce
-    }
-
-    // Verifica se é uma nova pressão válida
-    if (raw_state && !btn->press_processed)
-    {
-        // Botão está pressionado e o debounce time passou
-        if ((current_time - btn->last_press_time) > pdMS_TO_TICKS(BUTTON_DEBOUNCE_MS))
-        {
-            btn->press_processed = true;
-            btn->current_state = true;
-            return true; // Nova pressão válida
-        }
-    }
-
-    // Reset quando botão é solto por tempo suficiente
-    if (!raw_state && btn->press_processed)
-    {
-        if ((current_time - btn->last_release_time) > pdMS_TO_TICKS(BUTTON_DEBOUNCE_MS))
-        {
-            btn->press_processed = false;
-            btn->current_state = false;
-        }
-    }
-
-    return false;
 }
 
 void handle_menu_navigation(void)
@@ -362,7 +290,7 @@ esp_err_t init_menu_buttons(void) // adaptar pra usar a lib
         .mode = GPIO_MODE_INPUT,
         .pull_up_en = GPIO_PULLUP_ENABLE,
         .pull_down_en = GPIO_PULLDOWN_DISABLE,
-        .intr_type = GPIO_INTR_NEGEDGE // Start with polling, can enable ISR later
+        .intr_type = GPIO_INTR_NEGEDGE
     };
 
     esp_err_t ret = gpio_config(&gpio_conf);
@@ -385,14 +313,13 @@ void show_boot_screen(void)
     ssd1306_clear_buffer();
 
     // Boot animation
-    ssd1306_draw_string(20, 15, "game console");
-    ssd1306_draw_string(35, 30, "v1.0");
-    ssd1306_draw_string(25, 45, "loading...");
+    ssd1306_draw_string(0, 15, "Game console");
+    ssd1306_draw_string(0, 30, "v1.0");
+    ssd1306_draw_string(0, 45, "Loading...");
 
     ssd1306_update_display();
     vTaskDelay(2000 / portTICK_PERIOD_MS);
 }
-
 
 void menu_task(void *pvParameters)
 {

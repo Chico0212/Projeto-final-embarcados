@@ -4,7 +4,7 @@ static const char *TAG = "PADDLE_PONG";
 
 static game_state_t game;
 
-const char* SCORE_FILE_PADDLE_PONG = "/files/paddle_pong.txt";
+const char *PADDLE_PONG_SCORE_FILE = "/files/pong.txt";
 
 TaskHandle_t paddle_pong_game_task_handle;
 
@@ -40,8 +40,8 @@ void reset_ball()
     game.ball.y = SSD1306_HEIGHT / 2;
 
     // Velocidade aleatória
-    game.ball.vx = (rand() % 2 == 0) ? 1.5f : -1.5f;
-    game.ball.vy = 1.0f;
+    game.ball.vx = (rand() % 2 == 0) ? 3.f : -3.f;
+    game.ball.vy = 2;
 }
 
 void update_paddle()
@@ -76,8 +76,9 @@ bool check_paddle_collision()
 void update_ball()
 {
     // Atualizar posição
-    game.ball.x += game.ball.vx;
-    game.ball.y += game.ball.vy;
+    float speed_factor = 1.2f;
+    game.ball.x += game.ball.vx * speed_factor;
+    game.ball.y += game.ball.vy * speed_factor;
 
     // Colisão com paredes laterais
     if (game.ball.x <= 0 || game.ball.x >= SSD1306_WIDTH - game.ball.size)
@@ -96,21 +97,19 @@ void update_ball()
         game.ball.y = 0;
     }
 
-    // Colisão com raquete
     if (check_paddle_collision() && game.ball.vy > 0)
     {
+        hit_ball();
         game.ball.vy = -game.ball.vy;
-        game.score += 10;
-
-        // Adicionar efeito baseado na posição de colisão na raquete
+        game.score += 1;
         float hit_pos = (game.ball.x - game.paddle.x) / (float)game.paddle.width;
-        game.ball.vx += (hit_pos - 0.5f) * 2.0f; // Efeito de "spin"
+        game.ball.vx += (hit_pos - 0.5f) * 2.0f;
 
         // Limitar velocidade máxima
-        if (game.ball.vx > 3.0f)
-            game.ball.vx = 3.0f;
-        if (game.ball.vx < -3.0f)
-            game.ball.vx = -3.0f;
+        if (game.ball.vx > 12.f)
+            game.ball.vx = 12.0f;
+        if (game.ball.vx < -12.0f)
+            game.ball.vx = -12.0f;
     }
 
     // Bola saiu pela parte inferior (perdeu uma vida)
@@ -130,39 +129,26 @@ void update_ball()
 
 void draw_game()
 {
-    // Limpar buffer
     ssd1306_clear_buffer();
 
-    if (game.game_over)
-    {
-        // Tela de game over
-        ssd1306_draw_string(10, 10, "GAME OVER");
-        char score_str[32];
-        snprintf(score_str, sizeof(score_str), "Score: %d", game.score);
-        ssd1306_draw_string(5, 25, score_str);
-    }
-    else
-    {
-        // Desenhar raquete
-                                                                                                                                                                                                                                                                                      
-        ssd1306_draw_rect(game.paddle.x, game.paddle.y,
-                          game.paddle.width, game.paddle.height, true);
+    ssd1306_draw_rect(game.paddle.x, game.paddle.y,
+                      game.paddle.width, game.paddle.height, true);
 
-        // Desenhar bola
-        ssd1306_draw_circle((int)game.ball.x + game.ball.size / 2,
-                            (int)game.ball.y + game.ball.size / 2,
-                            game.ball.size, true);
+    ssd1306_draw_circle((int)game.ball.x + game.ball.size / 2,
+                        (int)game.ball.y + game.ball.size / 2,
+                        game.ball.size, true);
 
-        // Desenhar HUD (Score e Vidas)
-        char hud_str[32];
-        snprintf(hud_str, sizeof(hud_str), "pt: %d", game.score);
-        ssd1306_draw_string(0, 1, hud_str);
+    // Desenhar Score e Vidas
+    char hud_str[32];
+    snprintf(hud_str, sizeof(hud_str), "Pts: %d", game.score);
+    ssd1306_draw_string(0, 1, hud_str);
 
-        snprintf(hud_str, sizeof(hud_str), "vida: %d", game.lives);
-        ssd1306_draw_string(50, 0, hud_str);
+    snprintf(hud_str, sizeof(hud_str), "Vida: %d", game.lives);
 
-        ssd1306_draw_line(0, 10, SSD1306_WIDTH - 1, 10);
-    }
+    int placement = SSD1306_WIDTH - strlen(hud_str) * 8;
+    ssd1306_draw_string(placement, 0, hud_str);
+
+    ssd1306_draw_line(0, 10, SSD1306_WIDTH - 1, 10);
 
     ssd1306_update_display();
     // game_lose();
@@ -183,11 +169,18 @@ bool check_restart()
 void game_task(void *pvParameters)
 {
     ESP_LOGI(TAG, "Iniciando task do jogo...");
+    uint32_t notif;
 
     while (1)
     {
+        if (xTaskNotifyWait(0, NOTIF_STOP, &notif, 0) == pdTRUE)
+        {
+            break;
+        }
         if (game.game_over)
         {
+            update_score(PADDLE_PONG_SCORE_FILE, game.score) ? game_win() : game_lose();
+            show_game_over(PADDLE_PONG_SCORE_FILE, game.score);
             break;
         }
 
@@ -197,8 +190,9 @@ void game_task(void *pvParameters)
         draw_game();
 
         // Controle de FPS
-        vTaskDelay(pdMS_TO_TICKS(50));
+        vTaskDelay(pdMS_TO_TICKS(75));
     }
+
     vTaskDelete(paddle_pong_game_task_handle);
 }
 

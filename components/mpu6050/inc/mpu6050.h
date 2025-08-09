@@ -8,8 +8,9 @@
 #include "driver/i2c.h"
 #include "esp_log.h"
 #include "esp_err.h"
+#include "i2c_commons.h"
 
-#define MPU6050_ADDR                0x68    // Endereço I2C padrão do MPU6050
+// Definições do MPU6050
 #define MPU6050_PWR_MGMT_1          0x6B    // Registro de gerenciamento de energia
 #define MPU6050_SMPLRT_DIV          0x19    // Sample Rate Divider
 #define MPU6050_CONFIG              0x1A    // Configuração
@@ -31,13 +32,6 @@
 #define MPU6050_GYRO_YOUT_L         0x46
 #define MPU6050_GYRO_ZOUT_H         0x47
 #define MPU6050_GYRO_ZOUT_L         0x48
-
-#define I2C_MASTER_SCL_IO           22      // GPIO do SCL
-#define I2C_MASTER_SDA_IO           21      // GPIO do SDA
-#define I2C_MASTER_NUM              I2C_NUM_0
-#define I2C_MASTER_FREQ_HZ          400000  // 100kHz
-#define I2C_MASTER_TX_BUF_DISABLE   0
-#define I2C_MASTER_RX_BUF_DISABLE   0
 
 typedef struct {
     int16_t accel_x;

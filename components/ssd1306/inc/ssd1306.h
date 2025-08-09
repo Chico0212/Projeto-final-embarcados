@@ -5,22 +5,16 @@
 #include <string.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "driver/i2c.h"
 #include "esp_log.h"
 #include "font.h"
+#include "i2c_commons.h"
 
-#define I2C_MASTER_SCL_IO           22    // GPIO para SCL
-#define I2C_MASTER_SDA_IO           21    // GPIO para SDA
-#define I2C_MASTER_NUM              0     // Número da porta I2C
-#define I2C_MASTER_FREQ_HZ          100000 // Frequência I2C
-#define I2C_MASTER_TX_BUF_DISABLE   0
-#define I2C_MASTER_RX_BUF_DISABLE   0
-#define I2C_MASTER_TIMEOUT_MS       1000
-
-#define SSD1306_I2C_ADDR            0x3C  // Endereço I2C (pode ser 0x3D)
+// Configurações do SSD1306
 #define SSD1306_WIDTH               128
 #define SSD1306_HEIGHT              64
 #define SSD1306_PAGES               8     // 64/8 = 8 páginas
+#define SSD1306_FONT_WIDTH          8     // Largura da fonte
+#define SSD1306_WIDTH_IN_CHARS      16    // Largura total / largura da letra == 128 / 8
 
 #define SSD1306_CMD_DISPLAY_OFF     0xAE
 #define SSD1306_CMD_DISPLAY_ON      0xAF
@@ -47,8 +41,6 @@ esp_err_t ssd1306_write_command(uint8_t cmd);
 
 esp_err_t ssd1306_write_data(uint8_t* data, size_t len);
 
-esp_err_t i2c_init(void);
-
 void ssd1306_init(void);
 
 void ssd1306_clear_buffer(void);
@@ -69,8 +61,9 @@ void ssd1306_draw_line(int x0, int y0, int x1, int y1);
 
 void ssd1306_draw_rect(int x, int y, int w, int h, bool filled);
 
-void i2c_scan(void);
-
 void ssd1306_test_pattern(void);
+
+
+int ssd1306_get_string_width(const char *str);
 
 #endif

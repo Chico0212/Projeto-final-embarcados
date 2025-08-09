@@ -55,16 +55,18 @@ void write_file(char *path, char *data)
 {
     char *EOL = "\n";
 
-    FILE *file = fopen(path, "w+a");
+    FILE *file = fopen(path, "w");
     if (file == NULL)
     {
-        ESP_LOGE(SD_CARD_TAG, "Falha ao criar o arquivo");
+        ESP_LOGE(SD_CARD_TAG, "Falha ao criar o arquivo: %s", path);
         return;
     }
 
+    ESP_LOGI(SD_CARD_TAG, "Escrevendo arquivo no path: %s", path);
     fprintf(file, data);
     fprintf(file, EOL);
     fclose(file);
+    ESP_LOGI(SD_CARD_TAG, "Arquivo criado com sucesso");
 }
 
 void read_file(char *path, char *out_content, int size)
@@ -72,29 +74,15 @@ void read_file(char *path, char *out_content, int size)
     FILE *file = fopen(path, "r");
     if (file == NULL)
     {
-        printf("Falha o ler o arquivo");
+        ESP_LOGE(SD_CARD_TAG, "Falha ao ler o arquivo: %s", path);
+        write_file(path, "0");
         return;
     }
 
+    ESP_LOGI(SD_CARD_TAG, "Lendo arquivo no path: %s", path);
+    
     fgets(out_content, size, file);
     fclose(file);
-}
 
-int update_score(char *file_path, int new_score)
-{
-    const int size = 20;
-    char data[size];
-
-    read_file(file_path, data, size);
-
-    int score = atoi(data);
-
-    if (new_score > score)
-    {
-        snprintf(data, size, "%d", score);
-        write_file(file_path, data);
-        read_file(file_path, data, sizeof(data));
-        return 1;
-    }
-    return 0;
+    ESP_LOGI(SD_CARD_TAG, "Arquivo lido com sucesso, conteúdo: %s", out_content);
 }

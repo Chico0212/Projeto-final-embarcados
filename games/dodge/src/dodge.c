@@ -1,4 +1,3 @@
-
 #include "dodge.h"
 
 const char *SCORE_FILE = "/files/dodge.txt";
@@ -57,17 +56,6 @@ void start_dodge_blocks_game(void)
         &dodge_blocks_game_task_handle);
 }
 
-void show_game_over()
-{
-    char score_text[20];
-
-    ssd1306_clear_buffer();
-    ssd1306_draw_string(20, 20, "game over");
-    snprintf(score_text, sizeof(score_text), "score: %d", score);
-    ssd1306_draw_string(20, 35, score_text);
-    ssd1306_update_display();
-}
-
 void dodge_blocks_game_task(void *)
 {
     reset_game();
@@ -75,17 +63,19 @@ void dodge_blocks_game_task(void *)
     float accel[3];
     float unused[3];
 
+    uint32_t notif;
+
     while (1)
     {
+        if (xTaskNotifyWait(0, NOTIF_STOP, &notif, 0) == pdTRUE)
+        {
+            break;
+        }
         if (game_over)
         {
-            show_game_over();
-            if (update_score(SCORE_FILE, score))
-            {
-                game_win();
-                break;
-            }
-            buzzer_defeat_melody();
+            update_score(SCORE_FILE, score) ? game_win() :  game_lose();
+            
+            show_game_over(SCORE_FILE, score);
             break;
         }
 
@@ -133,10 +123,10 @@ void dodge_blocks_game_task(void *)
             draw_block(&blocks[i]);
         char score_text[16];
 
-        snprintf(score_text, sizeof(score_text), "%d", score);
-        ssd1306_draw_string(DISPLAY_WIDTH - 30, 0, score_text);
+        snprintf(score_text, sizeof(score_text), "Score: %d", score);
+        ssd1306_draw_string(0, 0, score_text);
         ssd1306_update_display();
-        vTaskDelay(pdMS_TO_TICKS(50));
+        vTaskDelay(pdMS_TO_TICKS(100));
     }
 
     vTaskDelete(dodge_blocks_game_task_handle);

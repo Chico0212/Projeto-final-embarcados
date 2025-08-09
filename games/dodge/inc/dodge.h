@@ -12,6 +12,7 @@
 #include "mpu6050.h"
 #include "buzzer.h"
 #include "sd_card.h"
+#include "utils.h"
 
 #define DISPLAY_WIDTH        128
 #define DISPLAY_HEIGHT       64

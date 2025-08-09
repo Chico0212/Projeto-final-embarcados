@@ -13,6 +13,7 @@
 #include "ssd1306.h"
 #include "buzzer.h"
 #include "sd_card.h"
+#include "utils.h"
 
 #define PADDLE_WIDTH 20
 #define PADDLE_HEIGHT 3

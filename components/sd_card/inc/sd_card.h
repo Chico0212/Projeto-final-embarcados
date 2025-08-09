@@ -15,6 +15,4 @@
 void sd_card_init();
 void write_file(char* path, char* content);
 void read_file(char* path, char* out_content, int size);
-int update_score(char *file_path, int new_score);
-
 #endif
