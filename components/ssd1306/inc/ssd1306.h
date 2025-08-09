@@ -10,7 +10,6 @@
 #include "i2c_commons.h"
 
 // Configurações do SSD1306
-#define SSD1306_I2C_ADDR            0x3C  // Endereço I2C (pode ser 0x3D)
 #define SSD1306_WIDTH               128
 #define SSD1306_HEIGHT              64
 #define SSD1306_PAGES               8     // 64/8 = 8 páginas

@@ -147,7 +147,7 @@ void dodge_blocks_game_task(void *)
         snprintf(score_text, sizeof(score_text), "%d", score);
         ssd1306_draw_string(DISPLAY_WIDTH - 30, 0, score_text);
         ssd1306_update_display();
-        vTaskDelay(pdMS_TO_TICKS(50));
+        vTaskDelay(pdMS_TO_TICKS(100));
     }
 
     vTaskDelete(dodge_blocks_game_task_handle);

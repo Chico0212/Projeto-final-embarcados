@@ -11,7 +11,6 @@
 #include "i2c_commons.h"
 
 // Definições do MPU6050
-#define MPU6050_ADDR                0x68    // Endereço I2C padrão do MPU6050
 #define MPU6050_PWR_MGMT_1          0x6B    // Registro de gerenciamento de energia
 #define MPU6050_SMPLRT_DIV          0x19    // Sample Rate Divider
 #define MPU6050_CONFIG              0x1A    // Configuração

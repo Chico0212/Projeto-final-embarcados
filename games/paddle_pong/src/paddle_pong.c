@@ -5,7 +5,7 @@ static const char *TAG = "PADDLE_PONG";
 // Variáveis globais do jogo
 static game_state_t game;
 
-const char* SCORE_FILE_PADDLE_PONG = "/files/paddle_pong.txt";
+const char* PADDLE_PONG_SCORE_FILE = "/files/paddle_pong.txt";
 
 TaskHandle_t paddle_pong_game_task_handle;
 
@@ -43,8 +43,8 @@ void reset_ball()
     game.ball.y = SSD1306_HEIGHT / 2;
 
     // Velocidade aleatória
-    game.ball.vx = (rand() % 2 == 0) ? 1.5f : -1.5f;
-    game.ball.vy = 1.0f;
+    game.ball.vx = (rand() % 2 == 0) ? 3.f : -3.f;
+    game.ball.vy = 2;
 }
 
 // Função para atualizar a posição da raquete baseada no MPU6050
@@ -82,8 +82,9 @@ bool check_paddle_collision()
 void update_ball()
 {
     // Atualizar posição
-    game.ball.x += game.ball.vx;
-    game.ball.y += game.ball.vy;
+    float speed_factor = 1.2f;
+    game.ball.x += game.ball.vx * speed_factor;
+    game.ball.y += game.ball.vy * speed_factor;
 
     // Colisão com paredes laterais
     if (game.ball.x <= 0 || game.ball.x >= SSD1306_WIDTH - game.ball.size)
@@ -105,18 +106,19 @@ void update_ball()
     // Colisão com raquete
     if (check_paddle_collision() && game.ball.vy > 0)
     {
+        catch_sound();
         game.ball.vy = -game.ball.vy;
-        game.score += 10;
+        game.score += 1;
 
         // Adicionar efeito baseado na posição de colisão na raquete
         float hit_pos = (game.ball.x - game.paddle.x) / (float)game.paddle.width;
         game.ball.vx += (hit_pos - 0.5f) * 2.0f; // Efeito de "spin"
 
         // Limitar velocidade máxima
-        if (game.ball.vx > 3.0f)
-            game.ball.vx = 3.0f;
-        if (game.ball.vx < -3.0f)
-            game.ball.vx = -3.0f;
+        if (game.ball.vx > 12.f)
+            game.ball.vx = 12.0f;
+        if (game.ball.vx < -12.0f)
+            game.ball.vx = -12.0f;
     }
 
     // Bola saiu pela parte inferior (perdeu uma vida)
@@ -206,6 +208,12 @@ void game_task(void *pvParameters)
 
         // Controle de FPS
         vTaskDelay(pdMS_TO_TICKS(75));
+    }
+    
+    if (update_score(PADDLE_PONG_SCORE_FILE, game.score)) {
+        game_win();
+    } else {
+        game_lose();
     }
     vTaskDelete(paddle_pong_game_task_handle);
 }

@@ -55,7 +55,7 @@ void write_file(char *path, char *data)
 {
     char *EOL = "\n";
 
-    FILE *file = fopen(path, "w+a");
+    FILE *file = fopen(path, "w");
     if (file == NULL)
     {
         ESP_LOGE(SD_CARD_TAG, "Falha ao criar o arquivo");
@@ -72,7 +72,8 @@ void read_file(char *path, char *out_content, int size)
     FILE *file = fopen(path, "r");
     if (file == NULL)
     {
-        printf("Falha o ler o arquivo");
+        ESP_LOGE(SD_CARD_TAG, "Falha ao criar o arquivo");
+        write_file(path, "0");
         return;
     }
 

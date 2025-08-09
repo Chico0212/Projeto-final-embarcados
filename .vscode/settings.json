@@ -14,7 +14,9 @@
     "dodge.h": "c",
     "snake.h": "c",
     "freertos.h": "c",
-    "i2c_commons.h": "c"
+    "i2c_commons.h": "c",
+    "i2c.h": "c",
+    "esp_event.h": "c"
   },
   "idf.espIdfPath": "/home/francisco/esp/esp-idf/",
   "idf.toolsPath": "/home/francisco/.espressif",
