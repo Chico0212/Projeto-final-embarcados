@@ -9,7 +9,6 @@
 #include "buzzer.h"
 
 
-// Maze definitions
 #define MAZE_WIDTH 16
 #define MAZE_HEIGHT 8
 #define TILE_SIZE 8

@@ -1,14 +1,3 @@
-// #include <stdio.h>
-// #include <string.h>
-// #include "freertos/FreeRTOS.h"
-// #include "freertos/task.h"
-// #include "freertos/queue.h"
-// #include "driver/gpio.h"
-// #include "esp_log.h"
-// #include "ssd1306.h"
-// #include "mpu6050.h"
-// #include "dodge.h"
-// #include "buzzer.h"
 
 #include "dodge.h"
 

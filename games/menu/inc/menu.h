@@ -16,15 +16,12 @@
 #include "snake.h"
 #include "buzzer.h"
 
-// GPIO definitions for buttons
 #define BUTTON_NAV_GPIO       GPIO_NUM_25   // Button for navigating up/previous
 #define BUTTON_SELECT_GPIO   GPIO_NUM_26   // Button for selecting/confirming
 
-// Display dimensions (assuming standard SSD1306)
 #define DISPLAY_WIDTH        128
 #define DISPLAY_HEIGHT       64
 
-// Menu configuration
 #define MAX_MENU_ITEMS       4
 #define MENU_ITEM_HEIGHT     10
 #define MENU_START_Y         16
@@ -32,31 +29,26 @@
 #define TITLE_HEIGHT         12
 #define INSTRUCTION_HEIGHT   8
 
-// Menu layout definitions
 #define SELECTION_ARROW_X    2
 #define MENU_TEXT_X          12
 #define SELECTION_BOX_MARGIN 1
 #define TITLE_CENTER_X       32
 #define INSTRUCTIONS_Y       (DISPLAY_HEIGHT - INSTRUCTION_HEIGHT)
 
-// Button debounce time in milliseconds
 #define BUTTON_DEBOUNCE_MS   150
 
-// Button event types
 typedef enum {
     BUTTON_EVENT_NONE = 0,
     BUTTON_EVENT_PRESSED,
     BUTTON_EVENT_RELEASED
 } button_event_t;
 
-// Button event data structure
 typedef struct {
     gpio_num_t gpio_num;
     button_event_t event;
     TickType_t timestamp;
 } button_event_data_t;
 
-// Game selection enumeration
 typedef enum {
     GAME_TILT_MAZE = 0,
     GAME_DODGE_BLOCKS,
@@ -64,14 +56,12 @@ typedef enum {
     GAME_PADDLE_PONG
 } game_selection_t;
 
-// Menu state structure
 typedef struct {
     int current_selection;
     bool menu_active;
     bool in_game;
 } menu_state_t;
 
-// Button state for debouncing
 typedef struct {
     bool last_state;
     bool current_state;
@@ -82,7 +72,6 @@ typedef struct {
 
 void IRAM_ATTR button_isr_handler(void* arg);
 
-// === MENU DRAWING FUNCTIONS ===
 
 void draw_title(void);
 

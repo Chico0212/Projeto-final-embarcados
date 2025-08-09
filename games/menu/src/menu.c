@@ -44,7 +44,6 @@ void IRAM_ATTR button_isr_handler(void *arg) // pode ir pra lib dos botões tran
     }
 }
 
-// === MENU DRAWING FUNCTIONS ===
 
 void draw_title(void)
 {
@@ -131,7 +130,6 @@ void draw_complete_menu(void)
     ssd1306_update_display();
 }
 
-// === GAME LAUNCH FUNCTIONS ===
 
 void show_game_loading(game_selection_t game)
 {

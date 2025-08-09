@@ -2,14 +2,12 @@
 
 static const char *TAG = "PADDLE_PONG";
 
-// Variáveis globais do jogo
 static game_state_t game;
 
 const char* SCORE_FILE_PADDLE_PONG = "/files/paddle_pong.txt";
 
 TaskHandle_t paddle_pong_game_task_handle;
 
-// Função para inicializar o jogo
 void game_init()
 {
     ESP_LOGI(TAG, "Inicializando jogo...");
@@ -36,7 +34,6 @@ void game_init()
     ESP_LOGI(TAG, "Jogo inicializado!");
 }
 
-// Função para resetar a bola
 void reset_ball()
 {
     game.ball.x = SSD1306_WIDTH / 2;
@@ -47,7 +44,6 @@ void reset_ball()
     game.ball.vy = 1.0f;
 }
 
-// Função para atualizar a posição da raquete baseada no MPU6050
 void update_paddle()
 {
     float ax, ay, az;
@@ -69,7 +65,6 @@ void update_paddle()
     }
 }
 
-// Função para verificar colisão entre bola e raquete
 bool check_paddle_collision()
 {
     return (game.ball.x + game.ball.size >= game.paddle.x &&
@@ -78,7 +73,6 @@ bool check_paddle_collision()
             game.ball.y <= game.paddle.y + game.paddle.height);
 }
 
-// Função para atualizar a física da bola
 void update_ball()
 {
     // Atualizar posição
@@ -134,7 +128,6 @@ void update_ball()
     }
 }
 
-// Função para desenhar o jogo
 void draw_game()
 {
     // Limpar buffer
@@ -187,7 +180,6 @@ bool check_restart()
     return false;
 }
 
-// Task principal do jogo
 void game_task(void *pvParameters)
 {
     ESP_LOGI(TAG, "Iniciando task do jogo...");
@@ -210,7 +202,6 @@ void game_task(void *pvParameters)
     vTaskDelete(paddle_pong_game_task_handle);
 }
 
-// Função principal
 void start_paddle_pong_game()
 {
     game_init();

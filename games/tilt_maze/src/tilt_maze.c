@@ -37,7 +37,6 @@ void draw_maze(void)
   ssd1306_update_display();
 }
 
-// Versão corrigida da função update_player_from_tilt
 int update_player_from_tilt(void)
 {
   float ax, ay, az;

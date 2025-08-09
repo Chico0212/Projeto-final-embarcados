@@ -13,11 +13,9 @@
 #include "buzzer.h"
 #include "sd_card.h"
 
-// Display dimensions (assuming standard SSD1306)
 #define DISPLAY_WIDTH        128
 #define DISPLAY_HEIGHT       64
 
-// Menu configuration
 #define MAX_MENU_ITEMS       4
 #define MENU_ITEM_HEIGHT     10
 #define MENU_START_Y         16
@@ -25,14 +23,12 @@
 #define TITLE_HEIGHT         12
 #define INSTRUCTION_HEIGHT   8
 
-// Menu layout definitions
 #define SELECTION_ARROW_X    2
 #define MENU_TEXT_X          12 
 #define SELECTION_BOX_MARGIN 1
 #define TITLE_CENTER_X       32
 #define INSTRUCTIONS_Y       (DISPLAY_HEIGHT - INSTRUCTION_HEIGHT)
 
-// === INÍCIO DO JOGO "DODGE THE BLOCKS" ===
 #define PLAYER_WIDTH  8
 #define PLAYER_HEIGHT 8
 #define PLAYER_Y      (DISPLAY_HEIGHT - PLAYER_HEIGHT - 2)
