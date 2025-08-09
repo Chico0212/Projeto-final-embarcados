@@ -1,3 +1,6 @@
+#ifndef BUZZER_H
+#define BUZZER_H
+
 #include "driver/ledc.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -41,3 +44,5 @@ void game_lose();
 void catch_sound();
 
 void buzzer_mario_theme();
+
+#endif

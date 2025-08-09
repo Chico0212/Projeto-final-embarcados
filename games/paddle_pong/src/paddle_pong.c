@@ -205,7 +205,7 @@ void game_task(void *pvParameters)
         draw_game();
 
         // Controle de FPS
-        vTaskDelay(pdMS_TO_TICKS(50));
+        vTaskDelay(pdMS_TO_TICKS(75));
     }
     vTaskDelete(paddle_pong_game_task_handle);
 }

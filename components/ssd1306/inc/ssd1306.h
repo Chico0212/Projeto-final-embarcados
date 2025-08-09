@@ -5,18 +5,9 @@
 #include <string.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "driver/i2c.h"
 #include "esp_log.h"
 #include "font.h"
-
-// Configurações I2C
-#define I2C_MASTER_SCL_IO           22    // GPIO para SCL
-#define I2C_MASTER_SDA_IO           21    // GPIO para SDA
-#define I2C_MASTER_NUM              0     // Número da porta I2C
-#define I2C_MASTER_FREQ_HZ          100000 // Frequência I2C
-#define I2C_MASTER_TX_BUF_DISABLE   0
-#define I2C_MASTER_RX_BUF_DISABLE   0
-#define I2C_MASTER_TIMEOUT_MS       1000
+#include "i2c_commons.h"
 
 // Configurações do SSD1306
 #define SSD1306_I2C_ADDR            0x3C  // Endereço I2C (pode ser 0x3D)
@@ -54,9 +45,6 @@ esp_err_t ssd1306_write_command(uint8_t cmd);
 // Função para enviar dados I2C
 esp_err_t ssd1306_write_data(uint8_t* data, size_t len);
 
-// Inicializar I2C
-esp_err_t i2c_init(void);
-
 // Inicializar display SSD1306
 void ssd1306_init(void);
 
@@ -86,9 +74,6 @@ void ssd1306_draw_line(int x0, int y0, int x1, int y1);
 
 // Desenhar retângulo
 void ssd1306_draw_rect(int x, int y, int w, int h, bool filled);
-
-// Adicione estas declarações no ssd1306.h
-void i2c_scan(void);
 
 void ssd1306_test_pattern(void);
 

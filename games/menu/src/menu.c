@@ -165,7 +165,6 @@ void launch_game(game_selection_t selected_game)
     menu_state.in_game = true;
     menu_state.menu_active = false;
 
-    // TODO: Here you would call the actual game functions
     switch (selected_game)
     {
     case GAME_TILT_MAZE:
@@ -200,7 +199,6 @@ bool is_task_safe_to_delete(TaskHandle_t task) {
         return false;
     }
     
-    // Verifica se a task ainda existe no sistema
     eTaskState state = eTaskGetState(task);
     return (state != eDeleted && state != eInvalid);
 }
@@ -213,7 +211,6 @@ void kill_task_safely(TaskHandle_t *task_ptr) {
     
     TaskHandle_t task = *task_ptr;
     
-    // Verificação adicional de segurança
     if (!is_task_safe_to_delete(task)) {
         ESP_LOGI("MENU", "Task não é segura para deletar ou já foi deletada");
         *task_ptr = NULL;
@@ -222,13 +219,10 @@ void kill_task_safely(TaskHandle_t *task_ptr) {
     
     ESP_LOGI("MENU", "Iniciando deleção da task");
     
-    // Deleta a task
     vTaskDelete(task);
     
-    // Zera o handle imediatamente
     *task_ptr = NULL;
     
-    // Dá tempo para o idle task limpar
     vTaskDelay(pdMS_TO_TICKS(100));
     
     ESP_LOGI("MENU", "Task deletada com sucesso");
