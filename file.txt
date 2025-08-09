@@ -1,0 +1,87 @@
+.
+├── CMakeLists.txt
+├── components
+│   ├── button
+│   │   ├── CMakeLists.txt
+│   │   ├── inc
+│   │   │   └── button.h
+│   │   ├── README.md
+│   │   └── src
+│   │       └── button.c
+│   ├── buzzer
+│   │   ├── CMakeLists.txt
+│   │   ├── inc
+│   │   │   └── buzzer.h
+│   │   ├── README.md
+│   │   └── src
+│   │       └── buzzer.c
+│   ├── mpu6050
+│   │   ├── CMakeLists.txt
+│   │   ├── inc
+│   │   │   └── mpu6050.h
+│   │   ├── README.md
+│   │   └── src
+│   │       └── mpu6050.c
+│   ├── sd_card
+│   │   ├── CMakeLists.txt
+│   │   ├── inc
+│   │   │   └── sd_card.h
+│   │   ├── README.md
+│   │   └── src
+│   │       └── sd_card.c
+│   └── ssd1306
+│       ├── CMakeLists.txt
+│       ├── inc
+│       │   ├── font.h
+│       │   └── ssd1306.h
+│       ├── README.md
+│       └── src
+│           └── ssd1306.c
+├── diagrams
+│   ├── diagrama_blocos.jpg
+│   └── esquematico.pdf
+├── file.txt
+├── games
+│   ├── dodge
+│   │   ├── CMakeLists.txt
+│   │   ├── inc
+│   │   │   └── dodge.h
+│   │   ├── README.md
+│   │   └── src
+│   │       └── dodge.c
+│   ├── menu
+│   │   ├── CMakeLists.txt
+│   │   ├── inc
+│   │   │   └── menu.h
+│   │   ├── README.md
+│   │   └── src
+│   │       └── menu.c
+│   ├── paddle_pong
+│   │   ├── CMakeLists.txt
+│   │   ├── inc
+│   │   │   └── paddle_pong.h
+│   │   ├── README.md
+│   │   └── src
+│   │       └── paddle_pong.c
+│   ├── snake
+│   │   ├── CMakeLists.txt
+│   │   ├── inc
+│   │   │   └── snake.h
+│   │   ├── README.md
+│   │   └── src
+│   │       └── snake.c
+│   └── tilt_maze
+│       ├── CMakeLists.txt
+│       ├── inc
+│       │   └── tilt_maze.h
+│       ├── README.md
+│       └── src
+│           └── tilt_maze.c
+├── main
+│   ├── CMakeLists.txt
+│   └── main.c
+├── README.md
+├── sdkconfig
+└── sdkconfig.old
+
+35 directories, 50 files

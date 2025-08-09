@@ -26,6 +26,8 @@ typedef struct {
     int x, y;
 } Point;
 
+extern TaskHandle_t snake_game_task_handle;
+
 void draw_tile(int x, int y, char symbol);
 
 void place_fruit();

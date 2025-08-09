@@ -158,12 +158,12 @@ void ssd1306_clear_buffer(void) {
 void ssd1306_update_display(void) {
   ESP_LOGI(TAG, "=== Atualizando display ===");
   
-  // Verificar se há dados no buffer
-  int non_zero_bytes = 0;
-  for (int i = 0; i < sizeof(ssd1306_buffer); i++) {
-    if (ssd1306_buffer[i] != 0) non_zero_bytes++;
-  }
-  ESP_LOGI(TAG, "Buffer tem %d bytes não-zero de %d total", non_zero_bytes, sizeof(ssd1306_buffer));
+  // // Verificar se há dados no buffer
+  // int non_zero_bytes = 0;
+  // for (int i = 0; i < sizeof(ssd1306_buffer); i++) {
+  //   if (ssd1306_buffer[i] != 0) non_zero_bytes++;
+  // }
+  // ESP_LOGI(TAG, "Buffer tem %d bytes não-zero de %d total", non_zero_bytes, sizeof(ssd1306_buffer));
   
   ESP_LOGI(TAG, "Configurando área de escrita...");
   ssd1306_write_command(SSD1306_CMD_SET_COLUMN_ADDR);

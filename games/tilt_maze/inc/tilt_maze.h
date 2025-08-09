@@ -18,6 +18,8 @@ typedef struct {
   int x, y;
 } player_pos_t;
 
+extern TaskHandle_t tilt_maze_task_handle;
+
 void draw_maze(void);
 
 int update_player_from_tilt(void);

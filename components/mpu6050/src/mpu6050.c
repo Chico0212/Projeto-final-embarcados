@@ -146,6 +146,8 @@ esp_err_t mpu6050_init(void)
         return ret;
     }
 
+    // xTaskCreate(mpu6050_task, "mpu6050_task", )
+
     ESP_LOGI(TAG, "MPU6050 inicializado com sucesso!");
     return ESP_OK;
 }

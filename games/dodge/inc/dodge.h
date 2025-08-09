@@ -13,10 +13,6 @@
 #include "buzzer.h"
 #include "sd_card.h"
 
-// GPIO definitions for buttons
-#define BUTTON_UP_GPIO       GPIO_NUM_40   // Button for navigating up/previous
-#define BUTTON_SELECT_GPIO   GPIO_NUM_38  // Button for selecting/confirming
-
 // Display dimensions (assuming standard SSD1306)
 #define DISPLAY_WIDTH        128
 #define DISPLAY_HEIGHT       64
@@ -36,9 +32,6 @@
 #define TITLE_CENTER_X       32
 #define INSTRUCTIONS_Y       (DISPLAY_HEIGHT - INSTRUCTION_HEIGHT)
 
-// Button debounce time in milliseconds
-#define BUTTON_DEBOUNCE_MS   50
-
 // === INÍCIO DO JOGO "DODGE THE BLOCKS" ===
 #define PLAYER_WIDTH  8
 #define PLAYER_HEIGHT 8
@@ -54,6 +47,8 @@ typedef struct {
     float speed;
     bool active;
 } Block;
+
+extern TaskHandle_t dodge_blocks_game_task_handle;
 
 void draw_player();
 

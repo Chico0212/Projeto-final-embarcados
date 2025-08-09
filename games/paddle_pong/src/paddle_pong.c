@@ -7,6 +7,8 @@ static game_state_t game;
 
 const char* SCORE_FILE_PADDLE_PONG = "/files/paddle_pong.txt";
 
+TaskHandle_t paddle_pong_game_task_handle;
+
 // Função para inicializar o jogo
 void game_init()
 {
@@ -186,49 +188,9 @@ bool check_restart()
 }
 
 // Task principal do jogo
-// void game_task(void *pvParameters)
-// {
-//     ESP_LOGI(TAG, "Iniciando task do jogo...");
-
-//     while (1)
-//     {
-//         // if (game.game_over)
-//         // {
-//         //     if (check_restart())
-//         //     {
-//         //         game_init();
-//         //         vTaskDelay(pdMS_TO_TICKS(1000));
-//         //     }
-//         // }
-//         // else
-//         // {
-//         update_paddle();
-//         update_ball();
-
-//         draw_game();
-
-//         // Controle de FPS
-//         vTaskDelay(pdMS_TO_TICKS(GAME_SPEED));
-//     }
-// }
-
-// Função principal
-void start_paddle_pong_game()
+void game_task(void *pvParameters)
 {
-    // Inicializar jogo
-    game_init();
-
-    // Mostrar instruções
-    // ssd1306_clear_buffer();
-    // ssd1306_draw_string(10, 10, "Como jogar:");
-    // ssd1306_draw_string(5, 25, "Incline o ESP32");
-    // ssd1306_draw_string(5, 35, "para mover a");
-    // ssd1306_draw_string(5, 45, "raquete!");
-    // ssd1306_update_display();
-    // vTaskDelay(pdMS_TO_TICKS(3000));
-
-    // Criar task do jogo
-    // xTaskCreate(game_task, "game_task", 4096, NULL, 5, NULL);
+    ESP_LOGI(TAG, "Iniciando task do jogo...");
 
     while (1)
     {
@@ -237,22 +199,21 @@ void start_paddle_pong_game()
             break;
         }
 
-        // Atualizar jogo
         update_paddle();
         update_ball();
 
-        // Desenhar jogo
         draw_game();
 
         // Controle de FPS
-        vTaskDelay(pdMS_TO_TICKS(GAME_SPEED));
+        vTaskDelay(pdMS_TO_TICKS(50));
     }
+    vTaskDelete(paddle_pong_game_task_handle);
+}
 
-    if (update_score(SCORE_FILE_PADDLE_PONG, game.score)) {
-        game_win();
-        return;
-    }
+// Função principal
+void start_paddle_pong_game()
+{
+    game_init();
 
-    game_lose();
-    vTaskDelay(pdMS_TO_TICKS(3000));
+    xTaskCreate(game_task, "game_task", 4096, NULL, 5, &paddle_pong_game_task_handle);
 }

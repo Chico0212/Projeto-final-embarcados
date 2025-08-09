@@ -1,5 +1,7 @@
 #include "tilt_maze.h"
 
+TaskHandle_t tilt_maze_task_handle;
+
 static const uint8_t maze_map[MAZE_HEIGHT][MAZE_WIDTH] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
     {1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2},
@@ -8,7 +10,8 @@ static const uint8_t maze_map[MAZE_HEIGHT][MAZE_WIDTH] = {
     {1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1},
     {1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1},
     {1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1},
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
+    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+  };
 
 static player_pos_t player = {1, 1};
 
@@ -95,7 +98,27 @@ void finish()
   ssd1306_update_display();
 }
 
+void tilt_maze_task(void*);
+
 void start_tilt_maze_game(void)
+{
+  ESP_LOGI("TILT_MAZE", "Game started");
+  player.x = 1;
+  player.y = 1;
+
+  draw_maze();
+
+  xTaskCreate(
+    tilt_maze_task,
+    "tilt_maze_task",
+    4096,
+    NULL,
+    1,
+    &tilt_maze_task_handle
+  );
+}
+
+void tilt_maze_task(void*)
 {
   ESP_LOGI("TILT_MAZE", "Game started");
   player.x = 1;
@@ -109,7 +132,7 @@ void start_tilt_maze_game(void)
     {
       finish();
       game_win();
-      return; // mostrar mensagem de vitória
+      vTaskDelete(tilt_maze_task_handle);
     }
 
     vTaskDelay(pdMS_TO_TICKS(100));

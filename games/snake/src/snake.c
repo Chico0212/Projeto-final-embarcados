@@ -5,9 +5,11 @@ static int snake_len = 3;
 static int dx = TILE_SIZE;
 static int dy = 0;
 static Point fruit;
-static bool gam_over = false;
-static int scoree = 0;
+static bool game_over = false;
+static int score = 0;
 const char *SCORE_FILE_SNAKE = "/files/snake.txt";
+
+TaskHandle_t snake_game_task_handle;
 
 void draw_tile(int x, int y, char symbol)
 {
@@ -34,8 +36,8 @@ void reset_snake_game()
     snake[2] = (Point){.x = 32, .y = 32};
     dx = TILE_SIZE;
     dy = 0;
-    gam_over = false;
-    scoree = 0;
+    game_over = false;
+    score = 0;
     place_fruit();
 }
 
@@ -51,7 +53,7 @@ bool collision(Point head)
     return false;
 }
 
-void start_snake_game(void)
+void snake_game_task(void*)
 {
     ESP_LOGI("SNAKE", "Iniciando Snake...");
     reset_snake_game();
@@ -62,45 +64,38 @@ void start_snake_game(void)
 
     while (1)
     {
-        if (gam_over)
+        if (game_over)
         {
             ssd1306_clear_buffer();
             ssd1306_draw_string(20, 20, "GAME OVER");
-            char scoree_text[20];
-            snprintf(scoree_text, sizeof(scoree_text), "Score: %d", scoree);
-            ssd1306_draw_string(20, 35, scoree_text);
+            char score_text[20];
+            snprintf(score_text, sizeof(score_text), "Score: %d", score);
+            ssd1306_draw_string(20, 35, score_text);
             ssd1306_update_display();
-            vTaskDelay(2000 / portTICK_PERIOD_MS);
-            if (update_score(SCORE_FILE_SNAKE, scoree))
-            {
-                game_win();
-                return;
-            }
-            buzzer_defeat_melody();
-            return;
+            break;
         }
 
         if (mpu6050_read_all(&sensor_data) == ESP_OK)
         {
             mpu6050_convert_data(&sensor_data, accel, unused_gyro, &unused_temp);
-            if (accel[1] < 0.15f && dx == 0)
+            if (accel[1] < 0.35f && dx == 0)
             {
                 dx = -TILE_SIZE;
                 dy = 0; // Ir para a esquerda, se não estiver indo na horizontal
             }
-            else if (accel[1] > -0.15f && dx == 0)
+            else if (accel[1] > -0.35f && dx == 0)
             {
                 dx = TILE_SIZE;
                 dy = 0; // Ir para a direita, se não estiver indo na horizontal
             }
 
             // Movimentos no eixo vertical (cima/baixo) — AGORA baseados no eixo accel[0]
-            else if (accel[0] > 0.15f && dy == 0)
+            else if (accel[0] > 0.35f && dy == 0)
             {
                 dx = 0;
                 dy = TILE_SIZE; // Ir para baixo, se não estiver indo na vertical
             }
-            else if (accel[0] < -0.15f && dy == 0)
+            else if (accel[0] < -0.35f && dy == 0)
             {
                 dx = 0;
                 dy = -TILE_SIZE; // Ir para cima, se não estiver indo na vertical
@@ -109,38 +104,12 @@ void start_snake_game(void)
             ESP_LOGI("SNAKE", "X: %d, Y: %d", dx, dy);
         }
 
-        /**
-        // Movimentos no eixo horizontal (esquerda/direita) — AGORA baseados no eixo accel[1]
-if (accel[1] > 0.15f && dx == 0)
-{
-    dx = -TILE_SIZE;
-    dy = 0; // Ir para a esquerda, se não estiver indo na horizontal
-}
-else if (accel[1] < -0.15f && dx == 0)
-{
-    dx = TILE_SIZE;
-    dy = 0; // Ir para a direita, se não estiver indo na horizontal
-}
-
-// Movimentos no eixo vertical (cima/baixo) — AGORA baseados no eixo accel[0]
-else if (accel[0] > 0.15f && dy == 0)
-{
-    dx = 0;
-    dy = TILE_SIZE; // Ir para baixo, se não estiver indo na vertical
-}
-else if (accel[0] < -0.15f && dy == 0)
-{
-    dx = 0;
-    dy = -TILE_SIZE; // Ir para cima, se não estiver indo na vertical
-}
- */
-
         Point new_head = {snake[0].x + dx, snake[0].y + dy};
         ESP_LOGI("SNAKE", "Colision: %d", collision(new_head));
 
         if (collision(new_head))
         {
-            gam_over = true;
+            game_over = true;
             continue;
         }
 
@@ -154,7 +123,7 @@ else if (accel[0] < -0.15f && dy == 0)
         {
             if (snake_len < MAX_SNAKE_LEN - 1)
                 snake_len++;
-            scoree++;
+            score++;
             place_fruit();
         }
         else
@@ -169,6 +138,26 @@ else if (accel[0] < -0.15f && dy == 0)
         }
         draw_tile(fruit.x, fruit.y, FRUIT_SYMBOL);
         ssd1306_update_display();
-        vTaskDelay(pdMS_TO_TICKS(GAME_SPEED_MS));
+        vTaskDelay(pdMS_TO_TICKS(100));
     }
+
+    update_score(SCORE_FILE_SNAKE, score) ? game_win() : game_lose();
+
+    vTaskDelete(snake_game_task_handle);
 }
+
+void start_snake_game(void)
+{
+    ESP_LOGI("SNAKE", "Iniciando Snake...");
+    reset_snake_game();
+    
+    xTaskCreate(
+        snake_game_task,
+        "snake_game_task",
+        4096,
+        NULL,
+        1,
+        &snake_game_task_handle
+    );
+}
+

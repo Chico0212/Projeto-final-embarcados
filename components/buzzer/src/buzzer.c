@@ -107,3 +107,20 @@ void catch_sound() {
   buzzer_play_note(NOTE_G4, SIXTEENTH_NOTE);
   buzzer_play_note(NOTE_E5, EIGHTH_NOTE);
 }
+
+void buzzer_mario_theme() {
+  // Primeira parte da melodia
+  buzzer_play_note(NOTE_E5, EIGHTH_NOTE + SIXTEENTH_NOTE);
+  buzzer_play_note(NOTE_E5, EIGHTH_NOTE + SIXTEENTH_NOTE);
+  vTaskDelay(EIGHTH_NOTE / portTICK_PERIOD_MS);
+  buzzer_play_note(NOTE_E5, EIGHTH_NOTE + SIXTEENTH_NOTE);
+  vTaskDelay(EIGHTH_NOTE / portTICK_PERIOD_MS);
+  buzzer_play_note(NOTE_C5, EIGHTH_NOTE + SIXTEENTH_NOTE);
+  buzzer_play_note(NOTE_E5, EIGHTH_NOTE + SIXTEENTH_NOTE);
+  buzzer_play_note(NOTE_G5, EIGHTH_NOTE + SIXTEENTH_NOTE);
+  vTaskDelay(QUARTER_NOTE / portTICK_PERIOD_MS);
+  
+  // Segunda parte
+  buzzer_play_note(NOTE_G4, EIGHTH_NOTE + SIXTEENTH_NOTE);
+  vTaskDelay(QUARTER_NOTE / portTICK_PERIOD_MS);
+}

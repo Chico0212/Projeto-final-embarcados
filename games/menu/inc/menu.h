@@ -17,7 +17,7 @@
 #include "buzzer.h"
 
 // GPIO definitions for buttons
-#define BUTTON_UP_GPIO       GPIO_NUM_25   // Button for navigating up/previous
+#define BUTTON_NAV_GPIO       GPIO_NUM_25   // Button for navigating up/previous
 #define BUTTON_SELECT_GPIO   GPIO_NUM_26   // Button for selecting/confirming
 
 // Display dimensions (assuming standard SSD1306)
@@ -40,7 +40,7 @@
 #define INSTRUCTIONS_Y       (DISPLAY_HEIGHT - INSTRUCTION_HEIGHT)
 
 // Button debounce time in milliseconds
-#define BUTTON_DEBOUNCE_MS   50
+#define BUTTON_DEBOUNCE_MS   150
 
 // Button event types
 typedef enum {
@@ -74,7 +74,10 @@ typedef struct {
 // Button state for debouncing
 typedef struct {
     bool last_state;
-    TickType_t last_change_time;
+    bool current_state;
+    TickType_t last_press_time;
+    TickType_t last_release_time;
+    bool press_processed;  
 } button_state_t;
 
 void IRAM_ATTR button_isr_handler(void* arg);
@@ -91,15 +94,11 @@ void draw_status_info(void);
 
 void draw_complete_menu(void);
 
-// === GAME LAUNCH FUNCTIONS ===
-
 void show_game_loading(game_selection_t game);
 
 void launch_game(game_selection_t selected_game);
 
 void return_to_menu(void);
-
-// === BUTTON HANDLING ===
 
 bool is_button_pressed_debounced(gpio_num_t gpio_num);
 
@@ -107,17 +106,9 @@ void handle_menu_navigation(void);
 
 void handle_button_event(button_event_data_t* event_data);
 
-// === BUTTON POLLING TASK (ALTERNATIVE TO ISR) ===
-
-void button_polling_task(void* pvParameters);
-
-// === INITIALIZATION FUNCTIONS ===
-
 esp_err_t init_menu_buttons(void);
 
 void show_boot_screen(void);
-
-// === MAIN MENU TASK ===
 
 void menu_task(void* pvParameters);
 

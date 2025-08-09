@@ -12,13 +12,15 @@
 
 #include "dodge.h"
 
-const char* SCORE_FILE = "/files/dodge.txt";
+const char *SCORE_FILE = "/files/dodge.txt";
 
 static int player_x = DISPLAY_WIDTH / 2;
 static int score = 0;
 static bool game_over = false;
 
 static Block blocks[MAX_BLOCKS];
+
+TaskHandle_t dodge_blocks_game_task_handle;
 
 void draw_player()
 {
@@ -51,38 +53,58 @@ bool check_collision(Block *b)
             b->y < PLAYER_Y + PLAYER_HEIGHT && b->y + BLOCK_HEIGHT > PLAYER_Y);
 }
 
+void dodge_blocks_game_task(void *);
+
 void start_dodge_blocks_game(void)
+{
+    reset_game();
+
+    xTaskCreate(
+        dodge_blocks_game_task,
+        "dodge_blocks_game_task",
+        4096,
+        NULL,
+        1,
+        &dodge_blocks_game_task_handle);
+}
+
+void show_game_over()
+{
+    char score_text[20];
+
+    ssd1306_clear_buffer();
+    ssd1306_draw_string(20, 20, "game over");
+    snprintf(score_text, sizeof(score_text), "score: %d", score);
+    ssd1306_draw_string(20, 35, score_text);
+    ssd1306_update_display();
+}
+
+void dodge_blocks_game_task(void *)
 {
     reset_game();
     mpu6050_data_t sensor_data;
     float accel[3];
-    float unused_gyro[3];
-    float unused_temp;
+    float unused[3];
 
     while (1)
     {
         if (game_over)
         {
-            ssd1306_clear_buffer();
-            ssd1306_draw_string(20, 20, "game over");
-            char score_text[20];
-            snprintf(score_text, sizeof(score_text), "score: %d", score);
-            ssd1306_draw_string(20, 35, score_text);
-            //   ssd1306_draw_string(0, 55, "press b0 to back");
-            ssd1306_update_display();
-            if (update_score(SCORE_FILE, score)) {
+            show_game_over();
+            if (update_score(SCORE_FILE, score))
+            {
                 game_win();
-                return;
+                break;
             }
             buzzer_defeat_melody();
-            return;
+            break;
         }
 
         esp_err_t err = mpu6050_read_all(&sensor_data);
         if (err == ESP_OK)
         {
-            mpu6050_convert_data(&sensor_data, accel, unused_gyro, &unused_temp);
-            player_x += (int)(accel[1] * 6);
+            mpu6050_convert_data(&sensor_data, accel, unused, unused);
+            player_x += (int)(accel[1] * 10);
         }
         else
         {
@@ -121,10 +143,12 @@ void start_dodge_blocks_game(void)
         for (int i = 0; i < MAX_BLOCKS; i++)
             draw_block(&blocks[i]);
         char score_text[16];
-        
+
         snprintf(score_text, sizeof(score_text), "%d", score);
         ssd1306_draw_string(DISPLAY_WIDTH - 30, 0, score_text);
         ssd1306_update_display();
-        vTaskDelay(pdMS_TO_TICKS(GAME_DELAY_MS));
+        vTaskDelay(pdMS_TO_TICKS(50));
     }
+
+    vTaskDelete(dodge_blocks_game_task_handle);
 }

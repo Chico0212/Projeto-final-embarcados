@@ -43,6 +43,8 @@ typedef struct {
     bool paused;
 } game_state_t;
 
+extern TaskHandle_t paddle_pong_game_task_handle;
+
 // Função para inicializar o jogo
 void game_init();
 
