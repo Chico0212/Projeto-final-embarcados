@@ -8,7 +8,7 @@
 #include "esp_log.h"
 #include "esp_timer.h"
 
-#define BUTTON_DEBOUNCE_TIME_US     100000
+#define BUTTON_DEBOUNCE_TIME_US     200000
 #define BUTTON_LONG_PRESS_TIME_MS   1000
 #define MAX_BUTTONS                 8
 
