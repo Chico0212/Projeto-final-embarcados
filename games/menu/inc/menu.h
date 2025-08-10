@@ -72,9 +72,6 @@ typedef struct {
     bool press_processed;  
 } button_state_t;
 
-void IRAM_ATTR button_isr_handler(void* arg);
-
-
 void draw_title(void);
 
 void draw_menu_item(int item_index, bool is_selected);

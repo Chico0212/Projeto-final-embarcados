@@ -12,39 +12,6 @@ static const char *menu_items[MAX_MENU_ITEMS] = {
     "Snake tilt",
     "Paddle pong"};
 
-static QueueHandle_t button_queue = NULL;
-
-// void IRAM_ATTR button_isr_handler(void *arg) // pode ir pra lib dos botões tranquilamente
-// {
-//     gpio_num_t gpio_num = (gpio_num_t)(uint32_t)arg;
-
-//     static TickType_t last_isr_time[2] = {0, 0};
-//     int button_index = (gpio_num == BUTTON_NAV_GPIO) ? 0 : 1;
-
-//     TickType_t current_time = xTaskGetTickCountFromISR();
-
-//     if ((current_time - last_isr_time[button_index]) < pdMS_TO_TICKS(BUTTON_DEBOUNCE_MS))
-//     {
-//         return;
-//     }
-
-//     last_isr_time[button_index] = current_time;
-
-//     button_event_data_t event_data = {
-//         .gpio_num = gpio_num,
-//         .event = BUTTON_EVENT_PRESSED,
-//         .timestamp = xTaskGetTickCountFromISR()
-//     };
-
-//     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-//     xQueueSendFromISR(button_queue, &event_data, &xHigherPriorityTaskWoken);
-
-//     if (xHigherPriorityTaskWoken)
-//     {
-//         portYIELD_FROM_ISR();
-//     }
-// }
-
 void draw_title(void)
 {
     // Draw main title with border
@@ -265,14 +232,6 @@ esp_err_t init_menu_buttons(void) // adaptar pra usar a lib
 {
     ESP_LOGI("MENU", "Initializing buttons...");
 
-    // Create button event queue
-    button_queue = xQueueCreate(10, sizeof(button_event_data_t)); // acho que isso é criada na lib
-    if (button_queue == NULL)
-    {
-        ESP_LOGE("MENU", "Failed to create button queue");
-        return ESP_FAIL;
-    }
-
     // Configure GPIO for buttons with pull-up resistors
     gpio_config_t gpio_conf = {
         .pin_bit_mask = (1ULL << BUTTON_NAV_GPIO) | (1ULL << BUTTON_SELECT_GPIO),
@@ -287,10 +246,6 @@ esp_err_t init_menu_buttons(void) // adaptar pra usar a lib
         ESP_LOGE("MENU", "Failed to configure GPIO: %s", esp_err_to_name(ret));
         return ret;
     }
-
-    // gpio_install_isr_service(0);
-    // gpio_isr_handler_add(BUTTON_NAV_GPIO, button_isr_handler, (void *)BUTTON_NAV_GPIO);
-    // gpio_isr_handler_add(BUTTON_SELECT_GPIO, button_isr_handler, (void *)BUTTON_SELECT_GPIO);
 
     ESP_LOGI("MENU", "Buttons initialized successfully");
     return ESP_OK;

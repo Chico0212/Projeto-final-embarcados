@@ -52,6 +52,7 @@ void ssd1306_init(void) {
 
   // Sequência de inicialização com logs
   ESP_LOGI(TAG, "Enviando sequência de inicialização...");
+
   ssd1306_write_command(SSD1306_CMD_DISPLAY_OFF);
   ssd1306_write_command(SSD1306_CMD_SET_CLOCK_DIV);
   ssd1306_write_command(0x80);
