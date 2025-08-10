@@ -40,8 +40,8 @@ void reset_ball()
     game.ball.y = SSD1306_HEIGHT / 2;
 
     // Velocidade aleatória
-    game.ball.vx = (rand() % 2 == 0) ? 3.f : -3.f;
-    game.ball.vy = 2;
+    game.ball.vx = (rand() % 2 == 0) ? 5.f : -5.f;
+    game.ball.vy = 5;
 }
 
 void update_paddle()
@@ -106,10 +106,10 @@ void update_ball()
         game.ball.vx += (hit_pos - 0.5f) * 2.0f;
 
         // Limitar velocidade máxima
-        if (game.ball.vx > 12.f)
-            game.ball.vx = 12.0f;
-        if (game.ball.vx < -12.0f)
-            game.ball.vx = -12.0f;
+        if (game.ball.vx > 25.f)
+            game.ball.vx = 25.0f;
+        if (game.ball.vx < -25.0f)
+            game.ball.vx = -25.0f;
     }
 
     // Bola saiu pela parte inferior (perdeu uma vida)

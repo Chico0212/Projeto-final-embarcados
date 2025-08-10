@@ -14,36 +14,36 @@ static const char *menu_items[MAX_MENU_ITEMS] = {
 
 static QueueHandle_t button_queue = NULL;
 
-void IRAM_ATTR button_isr_handler(void *arg) // pode ir pra lib dos botões tranquilamente
-{
-    gpio_num_t gpio_num = (gpio_num_t)(uint32_t)arg;
+// void IRAM_ATTR button_isr_handler(void *arg) // pode ir pra lib dos botões tranquilamente
+// {
+//     gpio_num_t gpio_num = (gpio_num_t)(uint32_t)arg;
 
-    static TickType_t last_isr_time[2] = {0, 0};
-    int button_index = (gpio_num == BUTTON_NAV_GPIO) ? 0 : 1;
+//     static TickType_t last_isr_time[2] = {0, 0};
+//     int button_index = (gpio_num == BUTTON_NAV_GPIO) ? 0 : 1;
 
-    TickType_t current_time = xTaskGetTickCountFromISR();
+//     TickType_t current_time = xTaskGetTickCountFromISR();
 
-    if ((current_time - last_isr_time[button_index]) < pdMS_TO_TICKS(BUTTON_DEBOUNCE_MS))
-    {
-        return;
-    }
+//     if ((current_time - last_isr_time[button_index]) < pdMS_TO_TICKS(BUTTON_DEBOUNCE_MS))
+//     {
+//         return;
+//     }
 
-    last_isr_time[button_index] = current_time;
+//     last_isr_time[button_index] = current_time;
 
-    button_event_data_t event_data = {
-        .gpio_num = gpio_num,
-        .event = BUTTON_EVENT_PRESSED,
-        .timestamp = xTaskGetTickCountFromISR()};
+//     button_event_data_t event_data = {
+//         .gpio_num = gpio_num,
+//         .event = BUTTON_EVENT_PRESSED,
+//         .timestamp = xTaskGetTickCountFromISR()
+//     };
 
-    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-    xQueueSendFromISR(button_queue, &event_data, &xHigherPriorityTaskWoken);
+//     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+//     xQueueSendFromISR(button_queue, &event_data, &xHigherPriorityTaskWoken);
 
-    if (xHigherPriorityTaskWoken)
-    {
-        portYIELD_FROM_ISR();
-    }
-}
-
+//     if (xHigherPriorityTaskWoken)
+//     {
+//         portYIELD_FROM_ISR();
+//     }
+// }
 
 void draw_title(void)
 {
@@ -130,7 +130,6 @@ void draw_complete_menu(void)
     ssd1306_update_display();
 }
 
-
 void show_game_loading(game_selection_t game)
 {
     ssd1306_clear_buffer();
@@ -194,20 +193,10 @@ const char *get_task_state(eTaskState state)
     }
 }
 
-bool is_task_safe_to_delete(TaskHandle_t task)
-{
-    if (task == NULL)
-    {
-        return false;
-    }
-
-    eTaskState state = eTaskGetState(task);
-    return (state != eDeleted && state != eInvalid);
-}
-
 void kill_task_safely(TaskHandle_t task)
 {
-    if (task) {
+    if (task)
+    {
         xTaskNotify(task, NOTIF_STOP, eSetBits);
     }
 }
@@ -290,19 +279,18 @@ esp_err_t init_menu_buttons(void) // adaptar pra usar a lib
         .mode = GPIO_MODE_INPUT,
         .pull_up_en = GPIO_PULLUP_ENABLE,
         .pull_down_en = GPIO_PULLDOWN_DISABLE,
-        .intr_type = GPIO_INTR_NEGEDGE
-    };
+        .intr_type = GPIO_INTR_NEGEDGE};
 
-    esp_err_t ret = gpio_config(&gpio_conf);
+    esp_err_t ret = init_buttons_isr(&gpio_conf, handle_button_event);
     if (ret != ESP_OK)
     {
         ESP_LOGE("MENU", "Failed to configure GPIO: %s", esp_err_to_name(ret));
         return ret;
     }
 
-    gpio_install_isr_service(0);
-    gpio_isr_handler_add(BUTTON_NAV_GPIO, button_isr_handler, (void *)BUTTON_NAV_GPIO);
-    gpio_isr_handler_add(BUTTON_SELECT_GPIO, button_isr_handler, (void *)BUTTON_SELECT_GPIO);
+    // gpio_install_isr_service(0);
+    // gpio_isr_handler_add(BUTTON_NAV_GPIO, button_isr_handler, (void *)BUTTON_NAV_GPIO);
+    // gpio_isr_handler_add(BUTTON_SELECT_GPIO, button_isr_handler, (void *)BUTTON_SELECT_GPIO);
 
     ESP_LOGI("MENU", "Buttons initialized successfully");
     return ESP_OK;
@@ -340,7 +328,7 @@ void menu_task(void *pvParameters)
     while (1)
     {
         // Wait for button events with timeout
-        if (xQueueReceive(button_queue, &event_data, pdMS_TO_TICKS(100)) == pdTRUE)
+        if (button_wait_event(&event_data, BUTTON_DEBOUNCE_TIME_US) == ESP_OK)
         {
             ESP_LOGI("MENU", "Button event received: GPIO %d", event_data.gpio_num);
             handle_button_event(&event_data);

@@ -16,9 +16,10 @@
 #include "snake.h"
 #include "buzzer.h"
 #include "i2c_commons.h"
+#include "button.h"
 
-#define BUTTON_NAV_GPIO       GPIO_NUM_25   // Button for navigating up/previous
-#define BUTTON_SELECT_GPIO   GPIO_NUM_26   // Button for selecting/confirming
+// #define BUTTON_NAV_GPIO      GPIO_NUM_25   // Button for navigating up/previous
+// #define BUTTON_SELECT_GPIO   GPIO_NUM_26   // Button for selecting/confirming
 
 #define DISPLAY_WIDTH        128
 #define DISPLAY_HEIGHT       64
@@ -36,19 +37,19 @@
 #define TITLE_CENTER_X       32
 #define INSTRUCTIONS_Y       (DISPLAY_HEIGHT - INSTRUCTION_HEIGHT)
 
-#define BUTTON_DEBOUNCE_MS   150
+// #define BUTTON_DEBOUNCE_MS   150
 
-typedef enum {
-    BUTTON_EVENT_NONE = 0,
-    BUTTON_EVENT_PRESSED,
-    BUTTON_EVENT_RELEASED
-} button_event_t;
+// typedef enum {
+//     BUTTON_EVENT_NONE = 0,
+//     BUTTON_EVENT_PRESSED,
+//     BUTTON_EVENT_RELEASED
+// } button_event_t;
 
-typedef struct {
-    gpio_num_t gpio_num;
-    button_event_t event;
-    TickType_t timestamp;
-} button_event_data_t;
+// typedef struct {
+//     gpio_num_t gpio_num;
+//     button_event_t event;
+//     TickType_t timestamp;
+// } button_event_data_t;
 
 typedef enum {
     GAME_TILT_MAZE = 0,

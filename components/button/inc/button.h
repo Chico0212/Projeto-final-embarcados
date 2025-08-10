@@ -8,9 +8,12 @@
 #include "esp_log.h"
 #include "esp_timer.h"
 
-#define BUTTON_DEBOUNCE_TIME_MS     50
+#define BUTTON_DEBOUNCE_TIME_US     100000
 #define BUTTON_LONG_PRESS_TIME_MS   1000
 #define MAX_BUTTONS                 8
+
+#define BUTTON_NAV_GPIO      GPIO_NUM_25   // Button for navigating up/previous
+#define BUTTON_SELECT_GPIO   GPIO_NUM_26   // Button for selecting/confirming
 
 typedef enum {
     BUTTON_EVENT_PRESSED,
@@ -25,7 +28,7 @@ typedef struct {
     uint32_t timestamp;
 } button_event_data_t;
 
-typedef void (*button_isr_callback_t)(gpio_num_t gpio_num, button_event_t event);
+typedef void (*button_isr_callback_t)(button_event_data_t *event);
 
 typedef struct {
     gpio_num_t gpio_num;
@@ -38,6 +41,7 @@ typedef struct {
 
 esp_err_t init_buttons(gpio_config_t* gpio_button_config);
 
+void IRAM_ATTR button_isr_handler(void *arg);
 
 esp_err_t init_buttons_isr(gpio_config_t* gpio_button_config, button_isr_callback_t isr_callback);
 
