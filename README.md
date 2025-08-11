@@ -50,9 +50,10 @@ Confira a documentação oficial do projeto [clicando aqui](https://embarcados20
 
 ### Desenvolvedores
 
-<figure><img src="https://2203337374-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FRsqZHqRg6FIWtis1N7A8%2Fuploads%2FNbjy2SWgFDC0CyVimVlf%2Ffrancisco.png?alt=media&#x26;token=4f46ed79-940a-4fac-b038-1227c7fdaa56" alt="" width="188"><figcaption><p>Francisco Bezerra</p></figcaption></figure>
-
-<figure><img src="https://2203337374-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FRsqZHqRg6FIWtis1N7A8%2Fuploads%2FE6o43ffwCSgnar1cdbFB%2Figor.jpeg?alt=media&#x26;token=e3bc06e2-2464-4a3e-a126-5a5c3c14c4cd" alt="" width="188"><figcaption><p>Igor Kádson</p></figcaption></figure>
-
-<figure><img src="https://2203337374-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FRsqZHqRg6FIWtis1N7A8%2Fuploads%2FDPZoVtiPV5t8sPS14XV0%2Fmarilia.jpeg?alt=media&#x26;token=08c9b31b-af56-461d-95d1-a65058497c79" alt="" width="188"><figcaption><p>Marília Oliveira</p></figcaption></figure>
-
+<table>
+  <tr>
+    <td align="center"><img src="https://2203337374-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FRsqZHqRg6FIWtis1N7A8%2Fuploads%2FNbjy2SWgFDC0CyVimVlf%2Ffrancisco.png?alt=media&token=4f46ed79-940a-4fac-b038-1227c7fdaa56" alt="Francisco Bezerra" width="188"><br>Francisco Bezerra</td>
+    <td align="center"><img src="https://2203337374-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FRsqZHqRg6FIWtis1N7A8%2Fuploads%2FE6o43ffwCSgnar1cdbFB%2Figor.jpeg?alt=media&token=e3bc06e2-2464-4a3e-a126-5a5c3c14c4cd" alt="Igor Kádson" width="188"><br>Igor Kádson</td>
+    <td align="center"><img src="https://2203337374-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FRsqZHqRg6FIWtis1N7A8%2Fuploads%2FDPZoVtiPV5t8sPS14XV0%2Fmarilia.jpeg?alt=media&token=08c9b31b-af56-461d-95d1-a65058497c79" alt="Marília Oliveira" width="188"><br>Marília Oliveira</td>
+  </tr>
+</table>
